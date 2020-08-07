@@ -1,0 +1,17 @@
+{
+  "name": "wix-challenge-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd server && npm run dev",
+    "client-install": "cd client && npm install",
+    "server-install": "cd server && npm install",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "install-all": "npm run client-install && npm run server-install",
+    "heroku-postbuild": "npm run install-all && npm run build"
+  },
+  "author": "",
+  "license": "ISC"
+}
