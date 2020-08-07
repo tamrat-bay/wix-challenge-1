@@ -1,0 +1,19 @@
+** Learn TESTING **
+** Learn Material Ui **
+
+1) Finding Cars API
+
+//Client
+2) Components CarsBoard [
+    API GET request to '/cars/
+   
+    searchBar/filter {by: model , by: year},
+
+    <div>
+    //render card data according to the json
+    carCard {single car data }
+    </div>
+  ]
+
+//Server side 
+3) Endpoint '/cars'  {get cars json and send it to the client}
