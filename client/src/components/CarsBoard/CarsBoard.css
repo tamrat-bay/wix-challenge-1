@@ -1,0 +1,9 @@
+.CarsBoard{
+    
+}
+
+.CarsBoard .MuiGrid-container {
+    justify-content: center;
+    width: 80vw;
+    margin: 0 auto;
+}
