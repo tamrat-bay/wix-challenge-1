@@ -1,13 +1,13 @@
 ** Learn TESTING **
 ** Learn Material Ui **
 
-1) Finding Cars API
+1) Finding Cars API *https://myfakeapi.com/api/cars*
 
 //Client
 2) Components CarsBoard [
     API GET request to '/cars/
    
-    searchBar/filter {by: model , by: year},
+    searchBar/filterBar {by: model , by: year},
 
     <div>
     //render card data according to the json
