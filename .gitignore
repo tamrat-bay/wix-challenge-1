@@ -6,3 +6,4 @@
 # production
 /server/build
 /client/build
+node_modules

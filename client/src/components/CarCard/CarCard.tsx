@@ -1,5 +1,8 @@
 import React from "react";
 
+//Models
+import { ICar } from '../../models/ICar'
+
 //M-UI
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -15,19 +18,28 @@ import {
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
-    margin: 5,
+    maxWidth: "100%",
+    marginTop: 5,
+    marginLeft: "auto",
+    marginRight: "auto",
+    display: "flex",
+    flexDirection: "row"
   },
   media: {
     height: 140,
   },
 });
 
-const CarCard = () => {
+interface ICarCard  {
+  car:ICar;
+
+}
+
+const CarCard : React.SFC<ICarCard> = ({car}) => {
   const classes = useStyles();
 
   return (
-    <Grid xs={12} sm={6} md={4}>
+    <Grid xs={12} >
       <Card className={classes.root}>
         <CardActionArea>
           <CardMedia
@@ -37,10 +49,11 @@ const CarCard = () => {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              CAR DATA
+              {car.car}
+              {car.car_model}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              CAR DATA CAR DATA CAR DATA CAR DATA CAR DATA CAR DATA CAR DATA
+              car DATA car DATA car DATA car DATA car DATA car DATA car DATA
             </Typography>
           </CardContent>
         </CardActionArea>
