@@ -33,34 +33,40 @@ const FilterBar: React.SFC<IFilterBar> = ({
 
 interface IFormData  {
     brand: string;
-    year: string;
-    [key: string]: string;
+    year: number;
+    [key: string]: string | number;
 }
   const classes = useStyles();
 
   let formData: IFormData  = {
       brand:'',
-      year:''
+      year:0
   }
 
   const handelChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => formData[e.target.name] = e.target.value
 
+     
   const filterCarsByBrand = (brand : string) => {
-      const filteredCars: ICar[] = cars.filter(car => car.car ===  brand);
+      const filteredCars: ICar[] = cars.filter(car => car.car.toLowerCase() ===  brand.toLowerCase());
+      console.log('filteredCars',filteredCars);
+      
       setFilteredCars(filteredCars)
   }
 
 
   const submitForm: (e: React.FormEvent<HTMLFormElement>) => void = (e) =>{
       e.preventDefault()
-    console.log(formData)
-    // setFilterFlag(true)
+    const carBrand : string = formData.brand 
+    console.log('carBrand', carBrand);
+    
+    filterCarsByBrand(carBrand)
+    setFilterFlag(true)
   }
 
   return (
     <form className={classes.root} noValidate autoComplete="off" onSubmit={(e) => submitForm(e)}>
       <TextField id="brand" name="brand" label="Brand Name" color="secondary" onChange={(e)=> handelChange(e)} />
-      <TextField id="year" name="year" label="Year" color="secondary" onChange={(e)=> handelChange(e)} />
+      <TextField id="year" name="year" label="Year" type="number" color="secondary" onChange={(e)=> handelChange(e)} />
       {/* <TextField id="standard-secondary" label="Until" color="secondary" /> */}
       <Button variant="outlined" type="submit" color="primary">
         Search

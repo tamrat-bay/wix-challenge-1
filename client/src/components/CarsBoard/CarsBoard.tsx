@@ -32,6 +32,11 @@ const CarsBoard: React.FC = () => {
     getCars();
   }, []);
 
+
+console.log('filterFlag',filterFlag);
+console.log('filteredCars',filteredCars);
+
+  
   return (
     <div className="CarsBoard ">
       <Navbar />
