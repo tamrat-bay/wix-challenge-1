@@ -31,15 +31,14 @@ const useStyles = makeStyles({
 });
 
 interface ICarCard  {
-  car:ICar;
-
+  car:ICar ;
 }
 
-const CarCard : React.SFC<ICarCard> = ({car}) => {
+const CarCard : React.SFC<ICarCard> = ({ car }) => {
   const classes = useStyles();
-
+  
   return (
-    <Grid xs={12} >
+    <Grid item xs={12} >
       <Card className={classes.root}>
         <CardActionArea>
           <CardMedia
@@ -49,11 +48,11 @@ const CarCard : React.SFC<ICarCard> = ({car}) => {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              {car.car}
-              {car.car_model}
+              {car.car} Model {car.car_model}
+              
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              car DATA car DATA car DATA car DATA car DATA car DATA car DATA
+              Model Year {car.car_model_year}
             </Typography>
           </CardContent>
         </CardActionArea>

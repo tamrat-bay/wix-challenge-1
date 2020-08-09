@@ -9,6 +9,7 @@ import { ICar } from "../../models/ICar";
 //M-UI
 import Grid from "@material-ui/core/Grid";
 import CarCard from "../CarCard/CarCard";
+import Navbar from "../Navbar/Navbar";
 
 const CarsBoard: React.FC = () => {
   const [cars, setCars] = useState<ICar[] | null>();
@@ -28,20 +29,31 @@ const CarsBoard: React.FC = () => {
         })
         .catch((err) => console.log(err));
     };
-
     getCars();
-    console.log("after set", cars);
   }, []);
 
   return (
     <div className="CarsBoard ">
-      CarsBoard
-      <FilterBar />
+      <Navbar />
+      <FilterBar setFilterFlag={setFilterFlag} setFilteredCars={setFilteredCars} cars={cars ? cars : []} />
       <div>
-        <Grid container spacing={3}>
-          {cars
-            ? cars.map((car: ICar) => <CarCard key={car.id} car={car} />)
-            : "Loading . . ."}
+        <Grid container >
+          {!filterFlag
+            ?
+            ( cars 
+              ?
+               cars.map((car: ICar) => <CarCard key={car.id} car={car} />)
+              :
+               "Loading . . .")
+            : 
+            (filteredCars
+               ?
+            filteredCars.map((car: ICar) => (
+                <CarCard key={car.id} car={car} />
+              ))
+              : 
+              "Loading . . .")
+            }
         </Grid>
       </div>
     </div>
