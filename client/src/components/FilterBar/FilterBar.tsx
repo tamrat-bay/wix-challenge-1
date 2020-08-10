@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './FilterBar.css'
 
 //Models
 import { ICar } from "../../models/ICar";
@@ -12,20 +13,15 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       "& > *": {
         margin: theme.spacing(1),
-        width: "25ch",
       },
     },
   })
 );
 
-//!Need to FIX handelChange Func to get type number for the year
-//! Check handelChange on refresh
 
 interface IFilterBar {
   cars: ICar[] | [];
-  setFilteredCars: React.Dispatch<
-    React.SetStateAction<ICar[] | null | undefined>
-  >;
+  setFilteredCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
   setFilterFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -34,44 +30,39 @@ const FilterBar: React.FC<IFilterBar> = ({
   setFilteredCars,
   setFilterFlag,
 }) => {
+
   interface IFormData {
     brand: string;
     year: string;
     [key: string]: string;
   }
+
   const classes = useStyles();
-  
   const [formData, setFormData] = useState<IFormData>({
     brand: "",
     year: "",
-  })
+  });
 
-  const handelChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormData(prevState => ({ ...prevState, [name]: value }));
-}
+  const handelChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   const filterCarsByBrand = (brand: string) => {
-    const filteredCars: ICar[] = cars.filter(
-      (car) => car.car.toLowerCase() === brand.toLowerCase()
-    );
+    const filteredCars: ICar[] = cars.filter((car :ICar) => car.car.toLowerCase() === brand.toLowerCase());
     setFilteredCars(filteredCars);
     setFilterFlag(true);
   };
-  const filterCarsByByYear = (year: number) => {
-    const filteredCars: ICar[] = cars.filter(
-      (car) => car.car_model_year === year
-    );
+
+  const filterCarsByByYear = (year: string) => {
+    const filteredCars: ICar[] = cars.filter((car :ICar) => Number(car.car_model_year) === Number(year) );
     setFilteredCars(filteredCars);
     setFilterFlag(true);
   };
-  const filterCarsByByBrandAndYear = (brand: string, year: number) => {
-    const filteredCars: ICar[] = cars.filter(
-      (car) =>
-        car.car_model_year === year &&
-        car.car.toLowerCase() === brand.toLowerCase()
-    );
+
+  const filterCarsByByBrandAndYear = (brand: string, year: string) => {
+    const filteredCars: ICar[] = cars.filter((car :ICar) => 
+    Number(car.car_model_year) === Number(year) && car.car.toLowerCase() === brand.toLowerCase());
     setFilteredCars(filteredCars);
     setFilterFlag(true);
   };
@@ -79,16 +70,15 @@ const FilterBar: React.FC<IFilterBar> = ({
   const submitForm: (e: React.FormEvent<HTMLFormElement>) => void = (e) => {
     e.preventDefault();
     const carBrand: string = formData.brand;
-    const modelYear: number = Number(formData.year);
-    console.log('formData',formData);
-    
+    const modelYear: string = formData.year
+
     if (carBrand && modelYear) return filterCarsByByBrandAndYear(carBrand, modelYear);
     if (carBrand) return filterCarsByBrand(carBrand);
     if (modelYear) return filterCarsByByYear(modelYear);
   };
 
   return (
-    <div>
+    <div className="FilterBar">
       <form
         className={classes.root}
         noValidate
@@ -112,17 +102,18 @@ const FilterBar: React.FC<IFilterBar> = ({
           color="secondary"
           onChange={(e) => handelChange(e)}
         />
-        {/* <TextField id="standard-secondary" label="Until" color="secondary" /> */}
-        <Button variant="outlined" type="submit" color="primary">
-          Filter
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => setFilterFlag(false)}
-          color="primary"
-        >
-          Display All
-        </Button>
+        <div className="FilterBar_formButtons">
+          <Button variant="outlined" type="submit" color="primary">
+            Filter
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => setFilterFlag(false)}
+            color="primary"
+          >
+            Display All
+          </Button>
+        </div>
       </form>
     </div>
   );

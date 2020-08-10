@@ -13,16 +13,14 @@ import Navbar from "../Navbar/Navbar";
 
 const CarsBoard: React.FC = () => {
   const [cars, setCars] = useState<ICar[] | null>();
-  const [filteredCars, setFilteredCars] = useState<ICar[] | null>();
+  const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
   const [filterFlag, setFilterFlag] = useState<boolean>(false);
 
   useEffect(() => {
-    //Get cars list from the Server
     const getCars = () => {
       axios
         .get("/cars")
         .then((res) => {
-          console.log("Res Data", res.data);
           if (res.status === 200) {
             setCars(res.data);
           }
@@ -31,10 +29,6 @@ const CarsBoard: React.FC = () => {
     };
     getCars();
   }, []);
-
-
-console.log('filterFlag',filterFlag);
-console.log('filteredCars',filteredCars);
 
   
   return (
@@ -51,13 +45,13 @@ console.log('filteredCars',filteredCars);
               :
                "Loading . . .")
             : 
-            (filteredCars
+            (filteredCars.length
                ?
-            filteredCars.map((car: ICar) => (
+            (filteredCars as ICar[]).map((car: ICar) => (
                 <CarCard key={car.id} car={car} />
               ))
               : 
-              "Loading . . .")
+              <h2>No Available Cars</h2>)
             }
         </Grid>
       </div>

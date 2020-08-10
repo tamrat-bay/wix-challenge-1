@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
             href="#home"
             aria-label="menu"
           >
-            TB - WIX Cars Challenge
+            Tamrat- WIX Cars Challenge
           </IconButton>
         </Toolbar>
       </AppBar>

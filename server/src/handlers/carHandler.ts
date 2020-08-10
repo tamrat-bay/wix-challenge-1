@@ -9,7 +9,6 @@ const addImgToCarObj = (carsArray : ICar[], imagesArray:string[]) : ICar[] => {
    return carsWithImages; 
 }
 
-
 const getCars = (req: Request, res: Response) => {
    return axios
     .get("https://myfakeapi.com/api/cars")
@@ -21,7 +20,6 @@ const getCars = (req: Request, res: Response) => {
       }
     })
     .catch((err) => res.status(400).send(err));
-
   };
 
 

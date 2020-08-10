@@ -1,0 +1,10 @@
+
+.FilterBar_formButtons {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+.FilterBar_formButtons .MuiButton-outlinedPrimary {
+    width: 120px;
+    margin: 2px;
+}

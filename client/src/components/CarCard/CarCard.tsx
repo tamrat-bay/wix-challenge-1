@@ -1,5 +1,6 @@
 import React from "react";
 import './CarsCard.css'
+
 //Models
 import { ICar } from '../../models/ICar'
 
@@ -7,10 +8,8 @@ import { ICar } from '../../models/ICar'
 import { makeStyles } from "@material-ui/core/styles";
 import {
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
-  Button,
   Typography,
   Card,
   Grid,
@@ -53,7 +52,6 @@ const CarCard : React.FC<ICarCard> = ({ car }) => {
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {car.car} Model {car.car_model}
-              
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
               Model Year {car.car_model_year}

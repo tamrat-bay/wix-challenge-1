@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from "express";
 import { getCars } from './handlers/carHandler'
-import { ICar } from "./models/carModel";
 
 const app: Application = express();
 const Port: number | string = process.env.PORT || 5000;
