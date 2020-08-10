@@ -13,8 +13,5 @@
     "heroku-postbuild": "npm run install-all && npm run build"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "concurrently": "^5.3.0"
-  }
+  "license": "ISC"
 }
