@@ -1,4 +1,4 @@
-export interface ICars {
+export interface ICar {
   id: number;
   car: string;
   car_model: string;
@@ -7,4 +7,5 @@ export interface ICars {
   car_vin: string;
   price: string;
   availability: Boolean;
+  img ?: string;
 }

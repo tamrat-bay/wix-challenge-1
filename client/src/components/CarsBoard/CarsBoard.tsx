@@ -24,7 +24,7 @@ const CarsBoard: React.FC = () => {
         .then((res) => {
           console.log("Res Data", res.data);
           if (res.status === 200) {
-            setCars(res.data.cars);
+            setCars(res.data);
           }
         })
         .catch((err) => console.log(err));

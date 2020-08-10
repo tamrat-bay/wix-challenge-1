@@ -6,6 +6,7 @@ export interface ICar {
     car_model_year: number;
     car_vin: string;
     price: string;
+    img: string;
     availability: Boolean;
   }
   

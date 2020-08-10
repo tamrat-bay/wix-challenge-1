@@ -1,7 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 
-const Navbar: React.SFC = () => {
+const Navbar: React.FC = () => {
   return (
     <div>
       <AppBar>

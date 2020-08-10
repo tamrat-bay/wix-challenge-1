@@ -1,5 +1,5 @@
 import React from "react";
-
+import './CarsCard.css'
 //Models
 import { ICar } from '../../models/ICar'
 
@@ -26,26 +26,30 @@ const useStyles = makeStyles({
     flexDirection: "row"
   },
   media: {
-    height: 140,
+    height: 150,
+    width:300,
   },
+
 });
 
 interface ICarCard  {
   car:ICar ;
 }
 
-const CarCard : React.SFC<ICarCard> = ({ car }) => {
+const CarCard : React.FC<ICarCard> = ({ car }) => {
   const classes = useStyles();
   
   return (
-    <Grid item xs={12} >
+    <Grid item xs={12} className="CarsCard">
       <Card className={classes.root}>
         <CardActionArea>
+          {car.img ? 
           <CardMedia
             className={classes.media}
-            image="https://cdn.pixabay.com/photo/2016/05/18/10/52/buick-1400243_960_720.jpg"
+            image={car.img}
             title="Contemplative Reptile"
           />
+          : 'Loading Image'}
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {car.car} Model {car.car_model}
@@ -54,16 +58,11 @@ const CarCard : React.SFC<ICarCard> = ({ car }) => {
             <Typography variant="body2" color="textSecondary" component="p">
               Model Year {car.car_model_year}
             </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              Price {car.price}
+            </Typography>
           </CardContent>
         </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
-          </Button>
-        </CardActions>
       </Card>
     </Grid>
   );
