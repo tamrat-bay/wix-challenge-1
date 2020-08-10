@@ -55,14 +55,14 @@ const FilterBar: React.FC<IFilterBar> = ({
   };
 
   const filterCarsByYear = (year: string) => {
-    const filteredCars: ICar[] = cars.filter((car :ICar) => Number(car.car_model_year) === Number(year) );
+    const filteredCars: ICar[] = cars.filter((car :ICar) => car.car_model_year === Number(year) );
     setFilteredCars(filteredCars);
     setFilterFlag(true);
   };
 
   const filterCarsByBrandAndYear = (brand: string, year: string) => {
     const filteredCars: ICar[] = cars.filter((car :ICar) => 
-    Number(car.car_model_year) === Number(year) && car.car.toLowerCase() === brand.toLowerCase());
+    car.car_model_year === Number(year) && car.car.toLowerCase() === brand.toLowerCase());
     setFilteredCars(filteredCars);
     setFilterFlag(true);
   };
