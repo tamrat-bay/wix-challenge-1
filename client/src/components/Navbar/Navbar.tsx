@@ -12,19 +12,8 @@ const Navbar: React.SFC = () => {
             href="#home"
             aria-label="menu"
           >
-            TB - Cars Challenge
+            TB - WIX Cars Challenge
           </IconButton>
-          <nav>
-            <a color="inherit" href="#About">
-              About
-            </a>
-            <a color="inherit" href="#Projects">
-              Projects
-            </a>
-            <a color="inherit" href="#Contact">
-              Contact
-            </a>
-          </nav>
         </Toolbar>
       </AppBar>
     </div>
