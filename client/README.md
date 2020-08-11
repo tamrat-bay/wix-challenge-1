@@ -6,7 +6,7 @@ I Have created initial mock data for the DB cars collection.
 The App includes all the CRUD operations.
 
 ## User operations
-### C - user can create new car object by clicking "Add new car".
+### C - User can create new car object by clicking "Add new car".
 ### R - User gets and can read all the cars data from the DB.
 ### U - User can update car object by clicking "Edit Car".
 ### D - User can delete car object by clicking "Delete".
