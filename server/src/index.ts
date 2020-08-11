@@ -9,7 +9,7 @@ const Port: number | string = process.env.PORT || 5000;
 app.use(express.json());
 config()
 
-const mongoURL = process.env.DB_URL || "localhost";
+const mongoURL: string = process.env.DB_URL || "localhost";
 
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
