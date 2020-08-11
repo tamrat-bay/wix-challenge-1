@@ -1,15 +1,17 @@
 import express, { Application, Request, Response } from "express";
+import { config } from 'dotenv'
 import mongoose from 'mongoose';
 import { getCars, addCar, deleteCar, editCar } from './handlers/carHandler'
 
-
 const app: Application = express();
 const Port: number | string = process.env.PORT || 5000;
+
 app.use(express.json());
+config()
 
-const mongoURI: string = "";
+const mongoURL = process.env.DB_URL || "localhost";
 
-mongoose.connect(mongoURI, {
+mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -17,8 +19,6 @@ mongoose.connect(mongoURI, {
   .then(() => console.log("MongoDb is Connected"))
   .catch((err) => console.log(err));
   
-  
-
   
 app.get("/cars", (req: Request, res: Response) => {
   return getCars(req, res)
