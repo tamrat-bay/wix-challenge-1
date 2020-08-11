@@ -4,6 +4,6 @@
 
 
 # production
-/server/build
+/server/dist
 /client/build
 node_modules

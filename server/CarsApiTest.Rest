@@ -1,3 +1,41 @@
 GET http://localhost:5000/cars 
 
 Content-Type: application/json
+
+###
+DELETE  http://localhost:5000/cars/5f321a2476050c6680d73eb4
+
+Content-Type: application/json
+
+###
+
+POST  http://localhost:5000/cars 
+Content-Type: application/json
+
+{
+    "car": "Mitsubishi",
+    "car_model": "Montero",
+    "car_color": "Green",
+    "car_model_year": 2020,
+    "car_vin": "SAJWJ0FF3F8321657",
+    "price": "$3814.46",
+    "availability": false,
+    "img": "https://cdn.pixabay.com/photo/2016/02/13/13/11/cuba-1197800_960_720.jpg",
+    "__v": 0
+  }
+###
+
+PUT   http://localhost:5000/cars/5f321f1de90e434c2c4c92a2
+Content-Type: application/json
+
+{
+    "car": "Mitsubishi",
+    "car_model": "Montero",
+    "car_color": "Black",
+    "car_model_year": 2020,
+    "car_vin": "SAJWJ0FF3F8321657",
+    "price": "$8814.46",
+    "availability": false,
+    "img": "https://cdn.pixabay.com/photo/2016/02/13/13/11/cuba-1197800_960_720.jpg",
+    "__v": 0
+  }

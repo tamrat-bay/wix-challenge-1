@@ -1,0 +1,21 @@
+.CarForm {
+    position: fixed;
+    top: 90px;
+    width: 70%;
+    background-color: #ffffff;
+    height: 360px;
+    overflow-y: overlay;
+    border-radius: 5px;
+    border: 1px solid #777777;
+    left: 50%;
+    transform: translate(-50%,0px);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.CarForm form.makeStyles-root-2 {
+ width: 90%;
+ margin: 5px auto;
+ justify-content: center;
+}

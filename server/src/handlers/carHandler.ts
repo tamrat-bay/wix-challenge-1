@@ -1,26 +1,38 @@
 import { ICar } from "../models/carModel";
 import { Request, Response } from "express";
-import { mockCarsImages } from './carsImagesArray'
-import axios from "axios";
+import Cars from '../models/carsSchema'
 
-// The API doesn't have images thats why i created this function to add img key to each car obj 
-const addImgToCarObj = (carsArray : ICar[], imagesArray:string[]) : ICar[] => {
-   const carsWithImages: ICar[] = carsArray.map((car:ICar, i:number) => { return {...car, img:imagesArray[i] }} ) 
-   return carsWithImages; 
-}
-
+// I created DB that contains mock cars info
 const getCars = (req: Request, res: Response) => {
-   return axios
-    .get("https://myfakeapi.com/api/cars")
-    .then((response) => {
-      if (response.status === 200) {
-          const carsData : ICar[] = response.data.cars.slice(0, 50)
-          const carsWithImages = addImgToCarObj(carsData,mockCarsImages)
-        return res.status(200).send(carsWithImages);
-      }
-    })
-    .catch((err) => res.status(400).send(err));
-  };
+   return Cars.find({}).then(cars => res.status(200).send(cars))
+   .catch(err => res.status(404).send(err))
+};
+
+const addCar = (req: Request, res: Response) => {
+   const newCarObj: ICar = req.body;
+   
+   Cars.create(newCarObj)
+   .then(car => res.status(201).send(car))
+   .catch(err => res.status(500).send(`Server problem - ${err}`))
+};
+
+const deleteCar = (req: Request, res: Response) => {
+   const id: string = req.params.id;
+
+   Cars.findByIdAndDelete(id)
+   .then(car => res.status(200).send("Car object was deleted"))
+   .catch(err => res.status(400).send(err))
+};
+
+const editCar = (req: Request, res: Response) => {
+   const newCar: ICar = req.body;
+   const id: string = req.params.id;
+
+   Cars.findByIdAndUpdate(id, newCar, { new: true })
+   .then(car => res.status(200).send(car))
+   .catch(err => res.status(400).send(err))
+};
 
 
-export { getCars }
+
+export { getCars, addCar, deleteCar, editCar}

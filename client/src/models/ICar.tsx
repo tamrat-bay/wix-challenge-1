@@ -1,12 +1,13 @@
 export interface ICar {
-    id: number;
+    _id: string;
+    id?: number;
     car: string;
     car_model: string;
-    car_color: string;
+    car_color?: string;
     car_model_year: number;
-    car_vin: string;
+    car_vin?: string;
     price: string;
     img: string;
-    availability: Boolean;
+    availability?: Boolean;
   }
   

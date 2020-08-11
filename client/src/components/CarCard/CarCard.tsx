@@ -42,13 +42,11 @@ const CarCard : React.FC<ICarCard> = ({ car }) => {
     <Grid item xs={12} className="CarsCard">
       <Card className={classes.root}>
         <CardActionArea>
-          {car.img ? 
           <CardMedia
             className={classes.media}
             image={car.img}
             title="Contemplative Reptile"
           />
-          : 'Loading Image'}
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {car.car} Model {car.car_model}
