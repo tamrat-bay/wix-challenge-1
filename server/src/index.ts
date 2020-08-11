@@ -7,7 +7,7 @@ const app: Application = express();
 const Port: number | string = process.env.PORT || 5000;
 app.use(express.json());
 
-const mongoURI: string = "";
+const mongoURI: string = "mongodb+srv://tamrat:87654321@mybudget-ajn0y.mongodb.net/wix-cars?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
