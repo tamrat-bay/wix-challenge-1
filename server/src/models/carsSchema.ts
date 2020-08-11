@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const carSchema = new mongoose.Schema({
-  _id: String,
   id: Number,
   car: {
     type: String,
