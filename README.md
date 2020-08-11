@@ -2,6 +2,7 @@
 ### Made by Tamrat Bayeh
 
 ### This project was made using React, Node, Typescript and MongoDB.
+I have created initial mock data for the DB cars collection.
 
 ## User operations
 ### C - user can create new car object by clicking "Add new car".
