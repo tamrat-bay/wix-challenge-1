@@ -4,13 +4,14 @@ import Cars from '../models/carsSchema'
 
 // I created DB that contains mock cars info
 const getCars = (req: Request, res: Response) => {
-   return Cars.find({}).then(cars => res.status(200).send(cars))
+  //I use reverse to display the last object that was added first in the client
+   return Cars.find({}).then(cars => res.status(200).send(cars.reverse()))
    .catch(err => res.status(404).send(err))
 };
 
 const addCar = (req: Request, res: Response) => {
    const newCarObj: ICar = req.body;
-   
+
    Cars.create(newCarObj)
    .then(car => res.status(201).send(car))
    .catch(err => res.status(500).send(`Server problem - ${err}`))
