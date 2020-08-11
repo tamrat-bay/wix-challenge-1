@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import FilterBar from "../FilterBar/FilterBar";
-import CarForm from "../CarForm/CarForm";
+import CreateCar from "../CreateCar/CreateCar";
+import EditCar from "../EditCar/EditCar";
+import CarCard from "../CarCard/CarCard";
+import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import "./CarsBoard.css";
 
@@ -8,15 +11,35 @@ import "./CarsBoard.css";
 import { ICar } from "../../models/ICar";
 
 //M-UI
-import Grid from "@material-ui/core/Grid";
-import CarCard from "../CarCard/CarCard";
-import Navbar from "../Navbar/Navbar";
+import { Grid, Button } from "@material-ui/core";
+
 
 const CarsBoard: React.FC = () => {
   const [cars, setCars] = useState<ICar[] | null>();
   const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
   const [filterFlag, setFilterFlag] = useState<boolean>(false);
-  const [addCarFlag, setAddCarFlag] = useState<boolean>(true);
+  const [addCarFlag, setAddCarFlag] = useState<boolean>(false);
+  const [editCarFlag, setEditCarFlag] = useState<boolean>(false);
+  const [selectedCar, setSelectedCar] = useState<ICar>( {
+    _id:'',
+    car:'',
+    car_model:'',
+    car_model_year:'',
+    img:'',
+    price:'',
+  });
+
+
+  const deleteCar = (id:string): void => {
+    axios.delete(`/cars/${id}`)
+    .then((res) => {
+      if (res.status === 200 && cars) {
+        let temp:ICar[] = cars.filter(car => car._id  !== id)
+        setCars(temp);
+      }
+    })
+    .catch(err => console.log(err))
+  }
 
   useEffect(() => {
     const getCars = () => {
@@ -36,27 +59,36 @@ const CarsBoard: React.FC = () => {
   return (
     <div className="CarsBoard ">
       <Navbar />
+
+      <div>
+      <Button variant="contained" color="primary" onClick={() => setAddCarFlag(true)}>
+        Add New Car
+      </Button>
+      </div>
       <FilterBar setFilterFlag={setFilterFlag} setFilteredCars={setFilteredCars} cars={cars ? cars : []} />
 
-        {addCarFlag ? <CarForm /> : null}
+        {addCarFlag ? <CreateCar setAddCarFlag={setAddCarFlag} cars={cars} setCars={setCars} /> : null}
+
+        {editCarFlag ? <EditCar setEditCarFlag={setEditCarFlag} selectedCar={selectedCar} cars={cars} setCars={setCars} /> : null}
 
       <div>
         <Grid container >
           {!filterFlag
             ?
-            ( cars 
+            (cars 
               ?
-               cars.map((car: ICar) => <CarCard key={car._id} car={car} />)
+               cars.map((car: ICar,i:number) => <CarCard key={i} car={car} setEditCarFlag={setEditCarFlag} deleteCar={deleteCar} setSelectedCar={setSelectedCar} />)
               :
-               "Loading . . .")
+               <p key="loading">Loading . . .</p>
+               )
             : 
             (filteredCars.length
                ?
-            (filteredCars as ICar[]).map((car: ICar) => (
-                <CarCard key={car._id} car={car} />
+            (filteredCars as ICar[]).map((car: ICar,i:number) => (
+                <CarCard key={i}  car={car} setEditCarFlag={setEditCarFlag} deleteCar={deleteCar} setSelectedCar={setSelectedCar} />
               ))
               : 
-              <h2>There are no available cars</h2>)
+              <h2 key="NoCars">There are no available cars</h2>)
             }
         </Grid>
       </div>

@@ -13,8 +13,13 @@
     display: flex;
     flex-direction: column;
 }
-
-.CarForm form.makeStyles-root-2 {
+.CarForm_closeWindow{
+    cursor: pointer;
+    text-decoration: underline;
+    color: #000000;
+    font-weight: 400;
+}
+.CarForm form.makeStyles-root-4 {
  width: 90%;
  margin: 5px auto;
  justify-content: center;

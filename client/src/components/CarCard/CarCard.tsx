@@ -10,6 +10,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  Button,
   Typography,
   Card,
   Grid,
@@ -22,7 +23,8 @@ const useStyles = makeStyles({
     marginLeft: "auto",
     marginRight: "auto",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "column",
+    padding:10,
   },
   media: {
     height: 150,
@@ -33,13 +35,16 @@ const useStyles = makeStyles({
 
 interface ICarCard  {
   car:ICar ;
+  setEditCarFlag:React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedCar: React.Dispatch<React.SetStateAction<ICar>>;
+  deleteCar: (id: string) => void;
 }
 
-const CarCard : React.FC<ICarCard> = ({ car }) => {
+const CarCard : React.FC<ICarCard> = ({ car,setSelectedCar,setEditCarFlag, deleteCar }) => {
   const classes = useStyles();
   
   return (
-    <Grid item xs={12} className="CarsCard">
+    <Grid item xs={12} className="CarsCard" onClick={()=> setSelectedCar(car)} >
       <Card className={classes.root}>
         <CardActionArea>
           <CardMedia
@@ -59,7 +64,16 @@ const CarCard : React.FC<ICarCard> = ({ car }) => {
             </Typography>
           </CardContent>
         </CardActionArea>
+        <div >
+             <Button variant="contained" color="primary" onClick={() => {setSelectedCar(car); setEditCarFlag(true)}}>
+             Edit Car
+             </Button>
+              <Button variant="contained" color="secondary" onClick={() => deleteCar(car._id)}>
+              Delete 
+             </Button>
+          </div>
       </Card>
+
     </Grid>
   );
 };

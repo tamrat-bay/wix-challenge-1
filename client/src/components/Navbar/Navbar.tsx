@@ -11,8 +11,9 @@ const Navbar: React.FC = () => {
             color="inherit"
             href="#home"
             aria-label="menu"
+            style={{fontSize: "1.1em"}}
           >
-            Tamrat- WIX Cars Challenge
+            Tamrat-WIX Cars Challenge
           </IconButton>
         </Toolbar>
       </AppBar>
