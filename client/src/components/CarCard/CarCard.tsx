@@ -44,7 +44,7 @@ const CarCard : React.FC<ICarCard> = ({ car,setSelectedCar,setEditCarFlag, delet
   const classes = useStyles();
   
   return (
-    <Grid item xs={12} className="CarsCard" onClick={()=> setSelectedCar(car)} >
+    <Grid data-testid="car-card" item xs={12} className="CarsCard" onClick={()=> setSelectedCar(car)} >
       <Card className={classes.root}>
         <CardActionArea>
           <CardMedia

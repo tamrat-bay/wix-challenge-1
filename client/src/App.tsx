@@ -4,7 +4,7 @@ import CarsBoard from './components/CarsBoard/CarsBoard';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <div data-testid="app" className="App">
         <CarsBoard />
     </div>
   );

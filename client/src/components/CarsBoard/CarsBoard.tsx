@@ -55,7 +55,7 @@ const CarsBoard: React.FC = () => {
   }, []);
 
   return (
-    <div className="CarsBoard ">
+    <div data-testid="cars-board" className="CarsBoard">
       <Navbar />
 
       <div>
@@ -75,7 +75,7 @@ const CarsBoard: React.FC = () => {
       />
 
       {addCarFlag ? (
-        <CreateCar
+        <CreateCar 
           setAddCarFlag={setAddCarFlag}
           cars={cars}
           setCars={setCars}

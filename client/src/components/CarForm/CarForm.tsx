@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ICarForm {
     closeWindow: React.Dispatch<React.SetStateAction<boolean>>;
-    initialValues: ICar ;
+    initialValues: ICar;
     axiosInfo: IAxiosInfo;
 }
 
@@ -68,17 +68,19 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
   };
 
   return (
-    <div className="CarForm"> 
+    <div data-testid="car-form" className="CarForm"> 
      <span className="CarForm_closeWindow" onClick={() => closeWindow(false)}>Close window</span>
       <form className={classes.root} onSubmit={(e) => {e.preventDefault(); formik.handleSubmit()}}>
         <TextField
-          id="standard-full-width"
+          id="brand"
           fullWidth
           label="Brand Name"
           placeholder="Toyota"
           value={formik.values.car}
           onChange={handleChange}
+          required={true}
           name="car"
+          inputProps={{ "data-testid": "car-form-input" }}
         />
         <TextField
           fullWidth
@@ -87,7 +89,10 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
           placeholder="Corolla"
           value={formik.values.car_model}
           onChange={handleChange}
+          required={true}
           name="car_model"
+          inputProps={{ "data-testid": "car-form-input" }}
+
         />
         <TextField
           fullWidth
@@ -96,7 +101,10 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
           type="number"
           value={formik.values.car_model_year}
           onChange={handleChange}
+          required={true}
           name="car_model_year"
+          inputProps={{ "data-testid": "car-form-input" }}
+
         />
         <TextField
           fullWidth
@@ -105,7 +113,10 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
           type="number"
           value={formik.values.price}
           onChange={handleChange}
+          required={true}
           name="price"
+          inputProps={{ "data-testid": "car-form-input" }}
+
         />
         <TextField
           fullWidth
@@ -113,7 +124,10 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
           id="color"
           value={formik.values.car_color}
           onChange={handleChange}
+          required={true}
           name="car_color"
+          inputProps={{ "data-testid": "car-form-input" }}
+
         />
         <TextField
           fullWidth
@@ -121,9 +135,15 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
           id="image"
           value={formik.values.img}
           onChange={handleChange}
+          required={true}
           name="img"
+          inputProps={{ "data-testid": "car-form-input" }}
         />
-        <Button variant="outlined" type="submit" color="primary">
+        <Button 
+          data-testid="car-form-submit-btn"
+          variant="outlined" 
+          type="submit" 
+          color="primary">
             Submit
         </Button>
       </form>

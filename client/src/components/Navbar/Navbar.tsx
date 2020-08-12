@@ -4,7 +4,7 @@ import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 const Navbar: React.FC = () => {
   return (
     <div>
-      <AppBar>
+      <AppBar data-testid="navbar">
         <Toolbar>
           <IconButton
             edge="start"

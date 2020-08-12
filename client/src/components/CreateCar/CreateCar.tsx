@@ -33,7 +33,7 @@ const CreateCar: React.FC<ICreateCar> = ({ setAddCarFlag, cars, setCars }) => {
 
 
     return (
-      <CarForm
+      <CarForm 
         axiosInfo={axiosInfo}
         initialValues={initialValue}
         closeWindow={setAddCarFlag}

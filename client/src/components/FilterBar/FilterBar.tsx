@@ -78,7 +78,7 @@ const FilterBar: React.FC<IFilterBar> = ({
   };
 
   return (
-    <div className="FilterBar">
+    <div data-testid="filter-bar" className="FilterBar">
       <form
         className={classes.root}
         noValidate
@@ -92,6 +92,7 @@ const FilterBar: React.FC<IFilterBar> = ({
           defaultValue={formData.brand}
           color="secondary"
           onChange={(e) => handelChange(e)}
+          inputProps={{ "data-testid": "filter-bar-input" }}
         />
         <TextField
           id="year"
@@ -101,6 +102,8 @@ const FilterBar: React.FC<IFilterBar> = ({
           type="number"
           color="secondary"
           onChange={(e) => handelChange(e)}
+          inputProps={{ "data-testid": "filter-bar-input" }}
+
         />
         <div className="FilterBar_formButtons">
           <Button variant="outlined" type="submit" color="primary">
