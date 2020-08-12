@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import './FilterBar.css'
+import "./FilterBar.css";
 
 //Models
 import { ICar } from "../../models/ICar";
 
 //M-Ui
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, Slider, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
 
 interface IFilterBar {
   cars: ICar[] | [];
@@ -30,51 +29,55 @@ const FilterBar: React.FC<IFilterBar> = ({
   setFilteredCars,
   setFilterFlag,
 }) => {
-
-  interface IFormData {
-    brand: string;
-    year: string;
-    [key: string]: string;
-  }
-
   const classes = useStyles();
-  const [formData, setFormData] = useState<IFormData>({
-    brand: "",
-    year: "",
-  });
+  const [years, setYears] = React.useState<number[]>([1990, 2020]);
+  const [brand, setBrand] = useState<string>("");
 
-  const handelChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  const yearHandleChange = (event: any, newValue: number | number[]) => {
+    setYears(newValue as number[]);
   };
 
-  const filterCarsByBrand = (brand: string) => {
-    const filteredCars: ICar[] = cars.filter((car :ICar) => car.car.toLowerCase() === brand.toLowerCase());
-    setFilteredCars(filteredCars);
-    setFilterFlag(true);
+  const brandHandelChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setBrand(value);
   };
 
-  const filterCarsByYear = (year: string) => {
-    const filteredCars: ICar[] = cars.filter((car :ICar) => car.car_model_year === Number(year) );
+  const filterCarsByBrand = (brand: string, cars: ICar[]): ICar[] => {
+    const filteredCars: ICar[] = cars.filter(
+      (car: ICar) => car.car.toLowerCase() === brand.toLowerCase()
+    );
     setFilteredCars(filteredCars);
-    setFilterFlag(true);
+    return filteredCars;
   };
 
-  const filterCarsByBrandAndYear = (brand: string, year: string) => {
-    const filteredCars: ICar[] = cars.filter((car :ICar) => 
-    car.car_model_year === Number(year) && car.car.toLowerCase() === brand.toLowerCase());
+  const filterCarsByYears = (years: number[], cars: ICar[]): ICar[] => {
+    const filteredCars: ICar[] = cars.filter(
+      (car: ICar) =>
+        years[0] <= car.car_model_year && years[1] >= car.car_model_year
+    );
     setFilteredCars(filteredCars);
-    setFilterFlag(true);
+    return filteredCars;
+  };
+
+  const filterCarsByBrandAndYears = (brand: string, years: number[]) => {
+    let filteredByBrand: ICar[] = filterCarsByBrand(brand, cars);
+    let filteredByBrandAndYears: ICar[] = filterCarsByYears(
+      years,
+      filteredByBrand
+    );
+    setFilteredCars(filteredByBrandAndYears);
   };
 
   const submitForm: (e: React.FormEvent<HTMLFormElement>) => void = (e) => {
     e.preventDefault();
-    const carBrand: string = formData.brand;
-    const modelYear: string = formData.year
 
-    if (carBrand && modelYear) return filterCarsByBrandAndYear(carBrand, modelYear);
-    if (carBrand) return filterCarsByBrand(carBrand);
-    if (modelYear) return filterCarsByYear(modelYear);
+    setFilterFlag(true);
+
+    if (brand && years) return filterCarsByBrandAndYears(brand, years);
+    if (brand) return filterCarsByBrand(brand, cars);
+    if (years[0]) return filterCarsByYears(years, cars);
   };
 
   return (
@@ -85,26 +88,31 @@ const FilterBar: React.FC<IFilterBar> = ({
         autoComplete="off"
         onSubmit={(e) => submitForm(e)}
       >
-        <TextField
-          id="brand"
-          name="brand"
-          label="Brand Name"
-          defaultValue={formData.brand}
-          color="secondary"
-          onChange={(e) => handelChange(e)}
-          inputProps={{ "data-testid": "filter-bar-input" }}
-        />
-        <TextField
-          id="year"
-          name="year"
-          label="Model Year"
-          defaultValue={formData.year}
-          type="number"
-          color="secondary"
-          onChange={(e) => handelChange(e)}
-          inputProps={{ "data-testid": "filter-bar-input" }}
+        <div className="FilterBar_selectors">
+          <TextField
+            id="brand"
+            name="brand"
+            label="Brand Name"
+            defaultValue={brand}
+            color="secondary"
+            onChange={(e) => brandHandelChange(e)}
+            inputProps={{ "data-testid": "filter-bar-input" }}
+          />
 
-        />
+          <div className="FilterBar_yearsSlider">
+            <Typography id="range-slider" gutterBottom>
+              Years Range
+            </Typography>
+            <Slider
+              min={1990}
+              max={2020}
+              value={years}
+              onChange={yearHandleChange}
+              valueLabelDisplay="on"
+              aria-labelledby="discrete-slider-always"
+            />
+          </div>
+        </div>
         <div className="FilterBar_formButtons">
           <Button variant="outlined" type="submit" color="primary">
             Filter

@@ -8,3 +8,13 @@
     width: 120px;
     margin: 2px;
 }
+
+.FilterBar_selectors{
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+.FilterBar_yearsSlider{
+    width: 225px;
+    margin: 0 20px;
+}
