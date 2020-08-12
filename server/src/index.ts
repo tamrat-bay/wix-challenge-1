@@ -1,7 +1,6 @@
 import express, { Application } from "express";
 import { config } from 'dotenv'
 import mongoose from 'mongoose';
-// import { getCars, addCar, deleteCar, editCar } from './handlers/carHandler';
 import carsRouter from './routes/cars'
 
 const app: Application = express();
