@@ -5,18 +5,8 @@ import "./FilterBar.css";
 import { ICar } from "../../models/ICar";
 
 //M-Ui
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { TextField, Button, Slider, Typography } from "@material-ui/core";
+import { TextField, Button, Slider, Typography  } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      "& > *": {
-        marginTop: theme.spacing(1),
-      },
-    },
-  })
-);
 
 interface IFilterBar {
   cars: ICar[] | [];
@@ -29,8 +19,7 @@ const FilterBar: React.FC<IFilterBar> = ({
   setFilteredCars,
   setFilterFlag,
 }) => {
-  const classes = useStyles();
-  const [years, setYears] = React.useState<number[]>([1990, 2020]);
+  const [years, setYears] = useState<number[]>([1990, 2020]);
   const [brand, setBrand] = useState<string>("");
 
   const yearHandleChange = (event: any, newValue: number | number[]) => {
@@ -77,13 +66,12 @@ const FilterBar: React.FC<IFilterBar> = ({
 
     if (brand && years) return filterCarsByBrandAndYears(brand, years);
     if (brand) return filterCarsByBrand(brand, cars);
-    if (years[0]) return filterCarsByYears(years, cars);
+    if (years) return filterCarsByYears(years, cars);
   };
 
   return (
     <div data-testid="filter-bar" className="FilterBar">
       <form
-        className={classes.root}
         noValidate
         autoComplete="off"
         onSubmit={(e) => submitForm(e)}

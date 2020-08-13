@@ -10,7 +10,7 @@ router.get('/', (req: Request, res: Response) => {
 })
 
 router.post('/', (req: Request, res: Response) => {
-    const { car,  car_model, car_model_year, img, price}: ICar = req.body;
+    const { car, car_model, car_model_year, img, price}: ICar = req.body;
 
     Cars.create({car,car_model, car_model_year, img, price})
     .then(car => res.status(201).send(car))
