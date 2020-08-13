@@ -14,7 +14,7 @@ const EditCar: React.FC<IEditCar> = ({ setEditCarFlag, cars, setCars, selectedCa
 
       const serverRequestInfo: IServerRequestsInfo = {
         method: "put",
-        url: `/cars/${selectedCar ? selectedCar._id : '1'}`,
+        url: `/cars/${selectedCar ? selectedCar._id : null}`,
         requestFunction: (newCar: ICar) => {
           if (cars && selectedCar) {
             const index: number = cars.findIndex((car) => car._id === selectedCar._id);
