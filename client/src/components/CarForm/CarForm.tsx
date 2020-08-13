@@ -11,7 +11,7 @@ import { TextField, Button } from "@material-ui/core";
 
 interface ICarForm {
     closeWindow: React.Dispatch<React.SetStateAction<boolean>>;
-    initialValues: ICar;
+    initialValues: ICar | undefined;
     serverRequestInfo: IServerRequestsInfo
 }
 
@@ -28,7 +28,17 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, serverRequestInfo, initialVa
           })
           .catch((err) => console.log("Error", err));
     }
-
+    
+    if(!initialValues){
+      initialValues = {
+        car:'',
+        car_model:'',
+        car_model_year:'',
+        img:'',
+        price:'',
+        _id:""
+      }
+    }
 
   const formik = useFormik({
     initialValues,

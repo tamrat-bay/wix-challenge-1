@@ -5,7 +5,7 @@ import "./CarsCard.css";
 import { ICar } from "../../models/ICar";
 
 //M-UI
-import { makeStyles } from "@material-ui/core/styles";
+import { useStyles } from './useStyles'
 import {
   CardActionArea,
   CardContent,
@@ -16,26 +16,11 @@ import {
   Grid,
 } from "@material-ui/core";
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: "100%",
-    marginTop: 5,
-    marginLeft: "auto",
-    marginRight: "auto",
-    display: "flex",
-    flexDirection: "column",
-    padding: 10,
-  },
-  media: {
-    height: 150,
-    width: 300,
-  },
-});
 
 interface ICarCard {
   car: ICar;
   setEditCarFlag: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedCar: React.Dispatch<React.SetStateAction<ICar>>;
+  setSelectedCar: React.Dispatch<React.SetStateAction<ICar | undefined>>;
   deleteCar: (id: string) => void;
 }
 
@@ -54,7 +39,6 @@ const CarCard: React.FC<ICarCard> = ({
           <CardMedia
             className={classes.media}
             image={car.img}
-            title="Contemplative Reptile"
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">

@@ -3,7 +3,6 @@ import FilterBar from "../FilterBar/FilterBar";
 import CreateCar from "../CreateCar/CreateCar";
 import EditCar from "../EditCar/EditCar";
 import CarCard from "../CarCard/CarCard";
-import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import "./CarsBoard.css";
 
@@ -14,19 +13,13 @@ import { ICar } from "../../models/ICar";
 import { Grid, Button } from "@material-ui/core";
 
 const CarsBoard: React.FC = () => {
+  
   const [cars, setCars] = useState<ICar[] | null>();
   const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
   const [filterFlag, setFilterFlag] = useState<boolean>(false);
   const [addCarFlag, setAddCarFlag] = useState<boolean>(false);
   const [editCarFlag, setEditCarFlag] = useState<boolean>(false);
-  const [selectedCar, setSelectedCar] = useState<ICar>({
-    _id: "",
-    car: "",
-    car_model: "",
-    car_model_year: "",
-    img: "",
-    price: "",
-  });
+  const [selectedCar, setSelectedCar] = useState<ICar>();
 
   const deleteCar = (id: string): void => {
     axios
@@ -56,7 +49,6 @@ const CarsBoard: React.FC = () => {
 
   return (
     <div data-testid="cars-board" className="CarsBoard">
-      <Navbar />
 
       <div>
         <Button

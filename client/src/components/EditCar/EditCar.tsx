@@ -7,7 +7,7 @@ interface IEditCar {
   setEditCarFlag: React.Dispatch<React.SetStateAction<boolean>>;
   cars: ICar[] | null | undefined ;
   setCars: React.Dispatch<React.SetStateAction<ICar[] | null | undefined>>;
-  selectedCar: ICar;
+  selectedCar: ICar | undefined;
   }
 
 const EditCar: React.FC<IEditCar> = ({ setEditCarFlag, cars, setCars, selectedCar }) => {
