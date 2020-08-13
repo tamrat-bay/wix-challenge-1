@@ -35,37 +35,29 @@ const FilterBar: React.FC<IFilterBar> = ({
 
   const filterCarsByBrand = (brand: string, cars: ICar[]): ICar[] => {
     const filteredCars: ICar[] = cars.filter(
-      (car: ICar) => car.car.toLowerCase() === brand.toLowerCase()
-    );
-    setFilteredCars(filteredCars);
+      (car: ICar) => car.car.toLowerCase() === brand.toLowerCase());
     return filteredCars;
   };
 
   const filterCarsByYears = (years: number[], cars: ICar[]): ICar[] => {
     const filteredCars: ICar[] = cars.filter(
-      (car: ICar) =>
-        years[0] <= car.car_model_year && years[1] >= car.car_model_year
-    );
-    setFilteredCars(filteredCars);
+      (car: ICar) => years[0] <= car.car_model_year && years[1] >= car.car_model_year);
     return filteredCars;
   };
 
-  const filterCarsByBrandAndYears = (brand: string, years: number[]) => {
-    let filteredByBrand: ICar[] = filterCarsByBrand(brand, cars);
-    let filteredByBrandAndYears: ICar[] = filterCarsByYears(
-      years,
-      filteredByBrand
-    );
-    setFilteredCars(filteredByBrandAndYears);
+  const filterCarsByBrandAndYears = (brand: string, years: number[]): ICar[]  => {
+    const filteredByBrand: ICar[] = filterCarsByBrand(brand, cars);
+    const filteredByBrandAndYears: ICar[] = filterCarsByYears(years,filteredByBrand);
+    return filteredByBrandAndYears;
   };
 
   const submitForm: (e: React.FormEvent<HTMLFormElement>) => void = (e) => {
     e.preventDefault();
     setFilterFlag(true);
 
-    if (brand && years) return filterCarsByBrandAndYears(brand, years);
-    if (brand) return filterCarsByBrand(brand, cars);
-    if (years) return filterCarsByYears(years, cars);
+    if (brand && years) return setFilteredCars(filterCarsByBrandAndYears(brand, years));
+    if (brand) return setFilteredCars(filterCarsByBrand(brand, cars)) 
+    if (years) return setFilteredCars(filterCarsByYears(years, cars)) 
   };
 
   return (
