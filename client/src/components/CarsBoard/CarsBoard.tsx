@@ -105,7 +105,7 @@ const CarsBoard: React.FC = () => {
                 />
               ))
             ) : (
-              <p key="loading">Loading Cars. . .</p>
+              <p>Loading Cars. . .</p>
             )
           ) : filteredCars.length ? (
             (filteredCars as ICar[]).map((car: ICar, i: number) => (

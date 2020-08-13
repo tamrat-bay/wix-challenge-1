@@ -19,7 +19,7 @@
     color: #000000;
     font-weight: 400;
 }
-.CarForm form.makeStyles-root-4 {
+.CarForm form{
  width: 90%;
  margin: 5px auto;
  justify-content: center;

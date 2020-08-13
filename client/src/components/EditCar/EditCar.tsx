@@ -12,11 +12,10 @@ interface IEditCar {
 
 const EditCar: React.FC<IEditCar> = ({ setEditCarFlag, cars, setCars, selectedCar }) => {
 
-
       const axiosInfo: IAxiosInfo = {
         method: "put",
         url: `/cars/${selectedCar ? selectedCar._id : '1'}`,
-        methodFunction: (newCar: ICar) => {
+        requestFunction: (newCar: ICar) => {
           if (cars && selectedCar) {
             const index: number = cars.findIndex((car) => car._id === selectedCar._id);
             let temp: ICar[] = [...cars]

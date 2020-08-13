@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import { config } from 'dotenv'
 import mongoose from 'mongoose';
-import carsRouter from './routes/cars'
+import carsRouter from './routes/carsRouter'
 
 const app: Application = express();
 const Port: number | string = process.env.PORT || 5000;
@@ -16,7 +16,7 @@ mongoose.connect(mongoURL,{
     useUnifiedTopology: true,
     useFindAndModify: false,
   })
-  .then(() => console.log("MongoDb is Connected"))
+  .then(() => console.log("MongoDB is Connected"))
   .catch((err) => console.log(err));
 
 app.use('/cars', carsRouter )

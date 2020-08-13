@@ -22,7 +22,7 @@ const FilterBar: React.FC<IFilterBar> = ({
   const [years, setYears] = useState<number[]>([1990, 2020]);
   const [brand, setBrand] = useState<string>("");
 
-  const yearHandleChange = (event: any, newValue: number | number[]) => {
+  const yearsHandleChange = (event: any, newValue: number | number[]) => {
     setYears(newValue as number[]);
   };
 
@@ -61,7 +61,6 @@ const FilterBar: React.FC<IFilterBar> = ({
 
   const submitForm: (e: React.FormEvent<HTMLFormElement>) => void = (e) => {
     e.preventDefault();
-
     setFilterFlag(true);
 
     if (brand && years) return filterCarsByBrandAndYears(brand, years);
@@ -95,7 +94,7 @@ const FilterBar: React.FC<IFilterBar> = ({
               min={1990}
               max={2020}
               value={years}
-              onChange={yearHandleChange}
+              onChange={yearsHandleChange}
               valueLabelDisplay="on"
               aria-labelledby="discrete-slider-always"
             />

@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
             aria-label="menu"
             style={{fontSize: "1.1em"}}
           >
-            Tamrat-WIX Cars Challenge
+            WIX Cars Challenge
           </IconButton>
         </Toolbar>
       </AppBar>

@@ -1,8 +1,8 @@
 import React from "react";
-import './CarsCard.css'
+import "./CarsCard.css";
 
 //Models
-import { ICar } from '../../models/ICar'
+import { ICar } from "../../models/ICar";
 
 //M-UI
 import { makeStyles } from "@material-ui/core/styles";
@@ -24,27 +24,31 @@ const useStyles = makeStyles({
     marginRight: "auto",
     display: "flex",
     flexDirection: "column",
-    padding:10,
+    padding: 10,
   },
   media: {
     height: 150,
-    width:300,
+    width: 300,
   },
-
 });
 
-interface ICarCard  {
-  car:ICar ;
-  setEditCarFlag:React.Dispatch<React.SetStateAction<boolean>>;
+interface ICarCard {
+  car: ICar;
+  setEditCarFlag: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedCar: React.Dispatch<React.SetStateAction<ICar>>;
   deleteCar: (id: string) => void;
 }
 
-const CarCard : React.FC<ICarCard> = ({ car,setSelectedCar,setEditCarFlag, deleteCar }) => {
+const CarCard: React.FC<ICarCard> = ({
+  car,
+  setSelectedCar,
+  setEditCarFlag,
+  deleteCar,
+}) => {
   const classes = useStyles();
-  
+
   return (
-    <Grid data-testid="car-card" item xs={12} className="CarsCard"  >
+    <Grid data-testid="car-card" item xs={12} className="CarsCard">
       <Card className={classes.root}>
         <CardActionArea>
           <CardMedia
@@ -64,16 +68,26 @@ const CarCard : React.FC<ICarCard> = ({ car,setSelectedCar,setEditCarFlag, delet
             </Typography>
           </CardContent>
         </CardActionArea>
-        <div >
-             <Button variant="contained" color="primary" onClick={() => {setSelectedCar(car); setEditCarFlag(true)}}>
-             Edit Car
-             </Button>
-              <Button variant="contained" color="secondary" onClick={() => deleteCar(car._id)}>
-              Delete 
-             </Button>
-          </div>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setSelectedCar(car);
+              setEditCarFlag(true);
+            }}
+          >
+            Edit Car
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => deleteCar(car._id)}
+          >
+            Delete
+          </Button>
+        </div>
       </Card>
-
     </Grid>
   );
 };

@@ -23,7 +23,7 @@ const CreateCar: React.FC<ICreateCar> = ({ setAddCarFlag, cars, setCars }) => {
       const axiosInfo: IAxiosInfo = {
         method: "post",
         url: `/cars/`,
-        methodFunction: (newCar: ICar) => {
+        requestFunction: (newCar: ICar) => {
           if (cars) {
             setCars([newCar,...cars])
           }

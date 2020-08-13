@@ -14,7 +14,7 @@ it("renders without crashing", () => {
   ReactDom.render(
     <CarForm
       closeWindow={jest.fn}
-      axiosInfo={{ method: "post", url: "/cars", methodFunction: jest.fn }}
+      axiosInfo={{ method: "post", url: "/cars", requestFunction: jest.fn }}
       initialValues={{
         _id: "1",
         car: "toyota",
@@ -32,7 +32,7 @@ it("renders correctly", () => {
   const { getByTestId } = render(
     <CarForm
       closeWindow={jest.fn}
-      axiosInfo={{ method: "post", url: "/cars", methodFunction: jest.fn }}
+      axiosInfo={{ method: "post", url: "/cars", requestFunction: jest.fn }}
       initialValues={{
         _id: "1",
         car: "toyota",
@@ -51,7 +51,7 @@ describe("Input value", () => {
     const { getAllByTestId } = render(
       <CarForm
         closeWindow={jest.fn}
-        axiosInfo={{ method: "post", url: "/cars", methodFunction: jest.fn }}
+        axiosInfo={{ method: "post", url: "/cars", requestFunction: jest.fn }}
         initialValues={{
           _id: "1",
           car: "toyota",
@@ -75,62 +75,3 @@ describe("Input value", () => {
   });
 });
 
-describe("Submit button", () => {
-  describe("with empty inputs", () => {
-    it("it does not trigger request function", () => {
-      const requestFunction = jest.fn();
-
-      const { getByTestId } = render(
-        <CarForm
-          closeWindow={jest.fn}
-          axiosInfo={{ method: "post", url: "/cars", methodFunction: jest.fn }}
-          initialValues={{
-            _id: "",
-            car: "",
-            car_model: "",
-            car_model_year: "",
-            price: "",
-            img: "",
-          }}
-        />
-      );
-
-      const submitBtn = getByTestId("car-form-submit-btn");
-      fireEvent.click(submitBtn);
-      expect(requestFunction).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("with value inside the inputs", () => {
-    it("triggers requestFunction", () => {
-      const requestFunction = jest.fn();
-
-      const { getByTestId, getAllByTestId } = render(
-        <CarForm
-          closeWindow={jest.fn}
-          axiosInfo={{ method: "post", url: "/cars", methodFunction: jest.fn }}
-          initialValues={{
-            _id: "",
-            car: "",
-            car_model: "",
-            car_model_year: "",
-            price: "",
-            img: "",
-          }}
-        />
-      );
-      const inputs = getAllByTestId("car-form-input") as HTMLInputElement[];
-
-      inputs.map((input) => {
-        fireEvent.change(input, { target: { value: "test" } });
-        const submitBtn = getByTestId("car-form-submit-btn");
-
-        setTimeout(() => {
-          expect(input.value).toBe("test");
-          fireEvent.click(submitBtn);
-          expect(requestFunction).toHaveBeenCalled();
-        }, 500);
-      });
-    });
-  });
-});

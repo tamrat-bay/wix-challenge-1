@@ -6,17 +6,8 @@ import axios from "axios";
 import './CarForm.css'
 
 //M-UI
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { TextField, Button } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-  })
-);
 
 interface ICarForm {
     closeWindow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,16 +16,15 @@ interface ICarForm {
 }
 
 const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) => {
-  const classes = useStyles();
 
   const handleSubmit: (values: ICar) => void = (values) => {
-    const { method, url, methodFunction } = axiosInfo;
+    const { method, url, requestFunction } = axiosInfo;
     switch (method) {
       case "post":
         axios({ method: "post",url: url,data: values,})
           .then((res) => {
             if (res.status === 201) {
-              methodFunction(res.data);
+              requestFunction(res.data);
             }
           })
           .catch((err) => console.log("Error", err));
@@ -44,7 +34,7 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
         axios({method: "put",url: url,data: values, })
         .then((res) => {
             if (res.status === 200) {
-              methodFunction(res.data);
+              requestFunction(res.data);
             }
           })
           .catch((error) => {
@@ -70,7 +60,7 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
   return (
     <div data-testid="car-form" className="CarForm"> 
      <span className="CarForm_closeWindow" onClick={() => closeWindow(false)}>Close window</span>
-      <form className={classes.root} onSubmit={(e) => {e.preventDefault(); formik.handleSubmit()}}>
+      <form onSubmit={(e) => {e.preventDefault(); formik.handleSubmit()}}>
         <TextField
           id="brand"
           fullWidth
@@ -124,7 +114,7 @@ const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) 
           id="color"
           value={formik.values.car_color}
           onChange={handleChange}
-          required={true}
+          required={false}
           name="car_color"
           inputProps={{ "data-testid": "car-form-input" }}
 
