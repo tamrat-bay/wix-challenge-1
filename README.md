@@ -16,7 +16,7 @@ I have created initial mock data for the DB cars collection.
 ## Images from the app
 
 ### Lending Page display filter bar and cars list
-![GitHub Logo](https://i.imgur.com/9bQCgzI.png)
+![GitHub Logo](https://i.imgur.com/IE3OW35.png)
 
 ### Add / Edit Car Form
 ![GitHub Logo](https://i.imgur.com/lqca9j4.png)
