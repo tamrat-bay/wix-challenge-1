@@ -1,8 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
 import { ICar } from "../../models/ICar";
-import { IAxiosInfo } from "../../models/IAxiosInfo";
-import axios from "axios";
+import { IServerRequestsInfo } from "../../models/IServerRequestsInfo";
+import axios, { Method } from "axios";
 import './CarForm.css'
 
 //M-UI
@@ -12,39 +12,23 @@ import { TextField, Button } from "@material-ui/core";
 interface ICarForm {
     closeWindow: React.Dispatch<React.SetStateAction<boolean>>;
     initialValues: ICar;
-    axiosInfo: IAxiosInfo;
+    serverRequestInfo: IServerRequestsInfo
 }
 
-const CarForm: React.FC<ICarForm> = ({ closeWindow, axiosInfo, initialValues }) => {
+const CarForm: React.FC<ICarForm> = ({ closeWindow, serverRequestInfo, initialValues }) => {
 
   const handleSubmit: (values: ICar) => void = (values) => {
-    const { method, url, requestFunction } = axiosInfo;
-    switch (method) {
-      case "post":
-        axios({ method: "post",url: url,data: values,})
+    const { method, url, requestFunction } = serverRequestInfo;
+       
+        axios({ method: (method as Method),url: url,data: values,})
           .then((res) => {
-            if (res.status === 201) {
+            if (res.status === 201 || 200) {
               requestFunction(res.data);
             }
           })
           .catch((err) => console.log("Error", err));
-        break;
-
-      case "put":
-        axios({method: "put",url: url,data: values, })
-        .then((res) => {
-            if (res.status === 200) {
-              requestFunction(res.data);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        break;
-      default:
-        break;
     }
-  };
+
 
   const formik = useFormik({
     initialValues,

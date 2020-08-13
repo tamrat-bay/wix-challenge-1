@@ -1,7 +1,7 @@
 import React from "react";
 import CarForm from "../CarForm/CarForm";
 import { ICar } from "../../models/ICar";
-import { IAxiosInfo } from "../../models/IAxiosInfo";
+import { IServerRequestsInfo } from "../../models/IServerRequestsInfo";
 
 interface IEditCar {
   setEditCarFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,7 +12,7 @@ interface IEditCar {
 
 const EditCar: React.FC<IEditCar> = ({ setEditCarFlag, cars, setCars, selectedCar }) => {
 
-      const axiosInfo: IAxiosInfo = {
+      const serverRequestInfo: IServerRequestsInfo = {
         method: "put",
         url: `/cars/${selectedCar ? selectedCar._id : '1'}`,
         requestFunction: (newCar: ICar) => {
@@ -29,7 +29,7 @@ const EditCar: React.FC<IEditCar> = ({ setEditCarFlag, cars, setCars, selectedCa
 
     return (
       <CarForm
-        axiosInfo={axiosInfo}
+       serverRequestInfo={serverRequestInfo}
         initialValues={selectedCar}
         closeWindow={setEditCarFlag}
       />
