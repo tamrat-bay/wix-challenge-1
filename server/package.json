@@ -8,7 +8,8 @@
     "server": "nodemon src/index.ts",
     "client": "cd.. && cd client && npm start",
     "build": "tsc -p .",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install cd.. --prefix client && npm run build cd.. --prefix client"
   },
   "keywords": [],
   "author": "",
