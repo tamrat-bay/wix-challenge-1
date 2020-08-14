@@ -1,6 +1,7 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import { config } from 'dotenv'
 import mongoose from 'mongoose';
+import path from 'path'
 import carsRouter from './routes/carsRouter'
 
 const app: Application = express();
@@ -20,6 +21,18 @@ mongoose.connect(mongoURL,{
   .catch((err) => console.log(err));
 
 app.use('/cars', carsRouter )
+
+if (process.env.NODE_ENV === "production") {
+  const buildPath = path.join(__dirname, "..", "..", "client", "build");
+  app.use(express.static(buildPath));
+  // --- handle unknown route
+  app.get("*", (req: Request, res: Response) => {
+    const indexHtmlPath = path.join(buildPath, "index.html");
+    res.sendFile(indexHtmlPath);
+  });
+} else {
+  console.log("Development mode");
+}
 
   
 app.listen(Port, () => console.log(`Server is listening on port ${Port}`));
