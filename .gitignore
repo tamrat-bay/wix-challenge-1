@@ -4,7 +4,6 @@
 
 
 # production
-/server/dist
+# /server/dist
 /server/.env
-/client/build
 
