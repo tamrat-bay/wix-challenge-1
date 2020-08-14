@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(indexHtmlPath);
   });
 } else {
-  console.log("Development mode");
+  console.log("Development Mode");
 }
 
   
