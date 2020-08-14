@@ -24,6 +24,7 @@ const CreateCar: React.FC<ICreateCar> = ({ setAddCarFlag, cars, setCars }) => {
         method: "post",
         url: `/cars/`,
         requestFunction: (newCar: ICar) => {
+          newCar.price = `$${newCar.price}`
           if (cars) {
             setCars([newCar,...cars])
           }

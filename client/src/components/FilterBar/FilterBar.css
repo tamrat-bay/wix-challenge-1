@@ -21,7 +21,7 @@
     width: 225px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 730px) {
     .FilterBar_selectors{
         flex-direction: column;
         align-items: center;

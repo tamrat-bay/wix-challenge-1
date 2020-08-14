@@ -63,6 +63,9 @@ const CarsBoard: React.FC = () => {
       <FilterBar
         setFilterFlag={setFilterFlag}
         setFilteredCars={setFilteredCars}
+        setCars={setCars}
+        filteredCars={filteredCars}
+        filterFlag={filterFlag}
         cars={cars ? cars : []}
       />
 
