@@ -8,9 +8,12 @@
     "client-install": "cd client && npm install",
     "server-install": "cd server && npm install",
     "build": "cd client && npm run build",
-    "start": "cd server && npm start",
     "install-all": "npm run client-install && npm run server-install",
-    "heroku-postbuild": "npm run install-all && npm run build"
+    "heroku-postbuild": "npm run install-all && npm run build",
+    "start": "cd server && npm start"
+  },
+  "engines": {
+    "node": "12.18.1"
   },
   "author": "",
   "license": "ISC"
