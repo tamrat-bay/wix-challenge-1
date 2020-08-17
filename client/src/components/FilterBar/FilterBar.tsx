@@ -26,7 +26,7 @@ import {
 interface IFilterBar {
   cars: ICar[] | [];
   filteredCars: ICar[] | [];
-  setCars: React.Dispatch<React.SetStateAction<ICar[] | null | undefined>>;
+  setCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
   setFilteredCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
   setFilterFlag: React.Dispatch<React.SetStateAction<boolean>>;
   filterFlag: boolean;
@@ -43,7 +43,7 @@ const FilterBar: React.FC<IFilterBar> = ({
 }) => {
   const [years, setYears] = useState<number[]>([1990, 2020]);
   const [brand, setBrand] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("Choose");
 
   const sortHandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const { value } = event.target 
@@ -106,7 +106,7 @@ const FilterBar: React.FC<IFilterBar> = ({
             <Typography id="range-slider" gutterBottom>
               Years Range
             </Typography>
-            <Slider
+            <Slider style={{zIndex : 0}}
               min={1990}
               max={2020}
               value={years}

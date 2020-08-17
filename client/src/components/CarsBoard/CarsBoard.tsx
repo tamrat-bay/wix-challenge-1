@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react";
 import FilterBar from "../FilterBar/FilterBar";
-import CreateCar from "../CreateCar/CreateCar";
-import EditCar from "../EditCar/EditCar";
+import CarForm from "../CarForm/CarForm";
 import CarCard from "../CarCard/CarCard";
 import axios from "axios";
 import "./CarsBoard.css";
+import { Method } from "axios";
+import Modal from "react-modal";
 
+import {
+  editServerRequestInfo,
+  postServerRequestInfo,
+} from "../../utils/serverRequestsInfo";
 //Models
 import { ICar } from "../../models/ICar";
-
 //M-UI
 import { Grid, Button } from "@material-ui/core";
 
 const CarsBoard: React.FC = () => {
-  
-  const [cars, setCars] = useState<ICar[] | null>();
+  const [cars, setCars] = useState<ICar[] | []>([]);
   const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
   const [filterFlag, setFilterFlag] = useState<boolean>(false);
-  const [addCarFlag, setAddCarFlag] = useState<boolean>(false);
-  const [editCarFlag, setEditCarFlag] = useState<boolean>(false);
-  const [selectedCar, setSelectedCar] = useState<ICar>();
+  const [selectedCar, setSelectedCar] = useState<ICar | null>(null);
+  const [formRequestMethod, setFormRequestMethod] = useState<Method>("post");
+  const [formModalIsOpen, setFormModalIsOpen] = useState<boolean>(false);
 
   const deleteCar = (id: string): void => {
     axios
@@ -47,54 +50,65 @@ const CarsBoard: React.FC = () => {
     getCars();
   }, []);
 
+
   return (
     <div data-testid="cars-board" className="CarsBoard">
-
       <div>
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setAddCarFlag(true)}
+          onClick={() => {
+            setFormRequestMethod("post");
+            setFormModalIsOpen(true);
+          }}
         >
           Add New Car
         </Button>
       </div>
-      
+
       <FilterBar
         setFilterFlag={setFilterFlag}
         setFilteredCars={setFilteredCars}
         setCars={setCars}
         filteredCars={filteredCars}
         filterFlag={filterFlag}
-        cars={cars ? cars : []}
+        cars={cars}
       />
 
-      {addCarFlag ? (
-        <CreateCar 
-          setAddCarFlag={setAddCarFlag}
-          cars={cars}
+      <Modal
+        data-testid="car-form"
+        isOpen={formModalIsOpen}
+        onRequestClose={() => {
+          setFormModalIsOpen(false);
+          setSelectedCar(null);
+        }}
+        className="CarForm"
+      >
+        <CarForm
+          method={formRequestMethod}
           setCars={setCars}
-        />
-      ) : null}
-
-      {editCarFlag ? (
-        <EditCar
-          setEditCarFlag={setEditCarFlag}
-          selectedCar={selectedCar}
           cars={cars}
-          setCars={setCars}
+          initialValues={selectedCar}
+          setSelectedCar={setSelectedCar}
+          serverRequestInfo={
+            formRequestMethod === "post"
+              ? postServerRequestInfo
+              : editServerRequestInfo
+          }
+          setFormModalIsOpen={setFormModalIsOpen}
         />
-      ) : null}
+      </Modal>
 
       <div>
         <Grid container>
           {!filterFlag ? (
-            cars ? (
-              cars.map((car: ICar, i: number) => (
+            cars.length ? (
+              (cars as Array<ICar>).map((car: ICar, i: number) => (
                 <CarCard
                   key={i}
                   car={car}
-                  setEditCarFlag={setEditCarFlag}
+                  setFormRequestMethod={setFormRequestMethod}
+                  setFormModalIsOpen={setFormModalIsOpen}
                   deleteCar={deleteCar}
                   setSelectedCar={setSelectedCar}
                 />
@@ -107,7 +121,8 @@ const CarsBoard: React.FC = () => {
               <CarCard
                 key={i}
                 car={car}
-                setEditCarFlag={setEditCarFlag}
+                setFormRequestMethod={setFormRequestMethod}
+                setFormModalIsOpen={setFormModalIsOpen}
                 deleteCar={deleteCar}
                 setSelectedCar={setSelectedCar}
               />

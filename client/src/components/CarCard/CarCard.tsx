@@ -1,5 +1,6 @@
 import React from "react";
 import "./CarsCard.css";
+import { Method } from "axios";
 
 //Models
 import { ICar } from "../../models/ICar";
@@ -17,17 +18,20 @@ import {
 } from "@material-ui/core";
 
 
+
 interface ICarCard {
   car: ICar;
-  setEditCarFlag: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedCar: React.Dispatch<React.SetStateAction<ICar | undefined>>;
+  setFormRequestMethod: React.Dispatch<React.SetStateAction<Method>>;
+  setFormModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedCar: React.Dispatch<React.SetStateAction<ICar | null>>;
   deleteCar: (id: string) => void;
 }
 
 const CarCard: React.FC<ICarCard> = ({
   car,
   setSelectedCar,
-  setEditCarFlag,
+  setFormRequestMethod,
+  setFormModalIsOpen,
   deleteCar,
 }) => {
   const classes = useStyles();
@@ -48,7 +52,7 @@ const CarCard: React.FC<ICarCard> = ({
               Model Year {car.car_model_year}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              Price {car.price}
+              Price ${car.price}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -58,7 +62,8 @@ const CarCard: React.FC<ICarCard> = ({
             color="primary"
             onClick={() => {
               setSelectedCar(car);
-              setEditCarFlag(true);
+              setFormRequestMethod("put");
+              setFormModalIsOpen(true);
             }}
           >
             Edit Car
