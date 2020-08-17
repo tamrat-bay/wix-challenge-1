@@ -1,8 +1,6 @@
 import  { ICar } from './ICar';
-import { Method } from 'axios';
 
 export interface IServerRequestsInfo {
-    method: string | Method;
     url: string;
-    requestFunction: (newData: ICar) => void;
+    requestFunction: (cars: ICar[], newData: ICar, id: string | null  ) => ICar[];
 }

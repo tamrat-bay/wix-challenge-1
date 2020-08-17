@@ -10,15 +10,15 @@ router.get('/', (req: Request, res: Response) => {
 })
 
 router.post('/', (req: Request, res: Response) => {
-    const { car, car_model, car_model_year, img, price}: ICar = req.body;
+    const { car, car_model, car_model_year, img, price, car_color}: ICar = req.body;
 
-    Cars.create({car,car_model, car_model_year, img, price})
+    Cars.create({car,car_model, car_model_year, img, price, car_color})
     .then(car => res.status(201).send(car))
     .catch(err =>{console.log(err);
      res.status(500).send(`Server problem - ${err}`)})
 })
 
-router.put('/:id', (req: Request, res: Response) => {
+router.put('/:id', (req: Request, res: Response) => {    
     const newCar: ICar = req.body;
     const id: string = req.params.id;
  
