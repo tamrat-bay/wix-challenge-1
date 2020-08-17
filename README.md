@@ -1,6 +1,6 @@
 # WIX challenge 1 - Using Cars API 
 
-###
+### Link => https://wix-cars-challenge.herokuapp.com/
 
 ### This project was made using React, Node, Typescript and MongoDB.
 I created mock cars data for the Database.
@@ -17,7 +17,7 @@ I created mock cars data for the Database.
 ## Images from the app
 
 ### Landing Page displays filter bar and cars list
-![GitHub Logo](https://i.imgur.com/IE3OW35.png)
+![GitHub Logo](https://imgur.com/U1bM1Px.png)
 
 ### Add / Edit Car Form
 ![GitHub Logo](https://i.imgur.com/lqca9j4.png)
