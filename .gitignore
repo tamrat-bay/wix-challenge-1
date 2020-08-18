@@ -1,7 +1,7 @@
 # dependencies
 /server/node_modules
 /client/node_modules
-
+/server/apiTest.rest
 
 # production
 /server/dist

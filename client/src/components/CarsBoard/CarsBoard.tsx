@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import FilterBar from "../FilterBar/FilterBar";
 import CarForm from "../CarForm/CarForm";
 import CarCard from "../CarCard/CarCard";
 import axios from "axios";
-import "./CarsBoard.css";
 import { Method } from "axios";
 import Modal from "react-modal";
-
+import { Redirect } from "react-router-dom";
+import { AuthContext } from "../../contexts/auth.context";
 import {
   editServerRequestInfo,
   postServerRequestInfo,
 } from "../../utils/serverRequestsInfo";
+import "./CarsBoard.css";
+
+
 //Models
 import { ICar } from "../../models/ICar";
 //M-UI
 import { Grid, Button } from "@material-ui/core";
+
 
 const CarsBoard: React.FC = () => {
   const [cars, setCars] = useState<ICar[] | []>([]);
@@ -23,6 +27,7 @@ const CarsBoard: React.FC = () => {
   const [selectedCar, setSelectedCar] = useState<ICar | null>(null);
   const [formRequestMethod, setFormRequestMethod] = useState<Method>("post");
   const [formModalIsOpen, setFormModalIsOpen] = useState<boolean>(false);
+  const { user } = useContext(AuthContext);
 
   const deleteCar = (id: string): void => {
     axios
@@ -50,7 +55,7 @@ const CarsBoard: React.FC = () => {
     getCars();
   }, []);
 
-
+  if (!user.isLoggedIn) return <Redirect to='/login' />;
   return (
     <div data-testid="cars-board" className="CarsBoard">
       <div>

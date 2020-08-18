@@ -1,0 +1,9 @@
+.Authentication{
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}

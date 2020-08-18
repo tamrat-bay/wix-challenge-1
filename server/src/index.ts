@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import path from 'path'
 import { config } from 'dotenv'
 import carsRouter from './routes/carsRouter'
+import usersRouter from './routes/usersRouter'
 
 const app: Application = express();
 const Port: number | string = process.env.PORT || 5000;
@@ -20,7 +21,8 @@ mongoose.connect(mongoURL,{
   .then(() => console.log("MongoDB is Connected"))
   .catch((err) => console.log(err));
 
-app.use('/cars', carsRouter )
+app.use('/cars', carsRouter );
+app.use('/users', usersRouter );
 
 if (process.env.NODE_ENV === "production") {
   const buildPath = path.join(__dirname, "..", "..", "client", "build");
