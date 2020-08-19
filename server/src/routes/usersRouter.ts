@@ -15,14 +15,10 @@ const authWithFacebook = async (req:Request, res:Response) =>{
       User.findOne({ fbUserID: fbUserID })
         .then((user) => {
           if (user) {
-            //if exist return 200
-            console.log("FB user was logged");
             res.status(200).send(user);
           } else {
-            //else save userID and Name and then return 201
             User.create({ fbUserID, name, authType })
               .then((user) => {
-                console.log("New FB user was added");
                 res.status(201).send(user);
               })
               .catch((err) => {
