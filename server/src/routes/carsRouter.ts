@@ -1,38 +1,65 @@
-import { ICar } from "../models/carModel";
 import { Request, Response, Router } from "express";
-import Cars from '../models/carsSchema'
+import {
+  verifyJsonWebToken,
+  verifyFbAccessToken,
+} from "../middlewares/verifyToken";
+import {
+  getCarsFromDb,
+  addCarToDb,
+  deleteCarFromDb,
+  editCarDataInDb,
+} from "../helpers/carHelpers";
 
-const router:Router = Router();
+const router: Router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-    Cars.find({}).then(cars => res.status(200).send(cars.reverse()))
-    .catch(err => res.status(404).send(err))
-})
+const facbookAuthType: string = 'facebook'
 
-router.post('/', (req: Request, res: Response) => {
-    const { car, car_model, car_model_year, img, price, car_color}: ICar = req.body;
+router.get("/:authType", async (req: Request, res: Response) => {
+  const { authType } = req.params;
 
-    Cars.create({car,car_model, car_model_year, img, price, car_color})
-    .then(car => res.status(201).send(car))
-    .catch(err =>{console.log(err);
-     res.status(500).send(`Server problem - ${err}`)})
-})
+  if (authType === facbookAuthType) {
+    const { isVerified, reason } = await verifyFbAccessToken(req);
+    isVerified ? getCarsFromDb(req, res) : res.status(401).send(reason);
+  } else {
+    const { isVerified, reason } = await verifyJsonWebToken(req);
+    isVerified ? getCarsFromDb(req, res) : res.status(401).send(reason);
+  }
+});
 
-router.put('/:id', (req: Request, res: Response) => {    
-    const newCar: ICar = req.body;
-    const id: string = req.params.id;
- 
-    Cars.findByIdAndUpdate(id, newCar, { new: true })
-    .then(car => res.status(200).send(car))
-    .catch(err => res.status(400).send(err))
-})
+router.post("/:authType/:userID", async (req: Request, res: Response) => {
+  const { authType } = req.params;
 
-router.delete('/:id', (req: Request, res: Response) => {
-    const id: string = req.params.id;
+  if (authType === facbookAuthType) {
+    const { isVerified, reason } = await verifyFbAccessToken(req);
+    isVerified ? addCarToDb(req, res) : res.status(401).send(reason);
+  } else {
+    const { isVerified, reason } = await verifyJsonWebToken(req);
+    isVerified ? addCarToDb(req, res) : res.status(401).send(reason);
+  }
+});
 
-    Cars.findByIdAndDelete(id)
-    .then(car => res.status(200).send("Car object was deleted"))
-    .catch(err => res.status(400).send(err))
-})
+router.put("/:authType/:carID", async (req: Request, res: Response) => {
+  const { authType } = req.params;
+
+  if (authType === facbookAuthType) {
+    const { isVerified, reason } = await verifyFbAccessToken(req);
+    isVerified ? editCarDataInDb(req, res) : res.status(401).send(reason);
+  } else {
+    const { isVerified, reason } = await verifyJsonWebToken(req);
+    isVerified ? editCarDataInDb(req, res) : res.status(401).send(reason);
+  }
+});
+
+router.delete("/:authType/:userID/:carID", async (req: Request, res: Response) => {
+  const { authType } = req.params; 
+
+  if (authType === facbookAuthType) {
+    const { isVerified, reason } = await verifyFbAccessToken(req);
+    isVerified ? deleteCarFromDb(req, res) : res.status(401).send(reason);
+  } else {
+    const { isVerified, reason } = await verifyJsonWebToken(req);
+    isVerified ? deleteCarFromDb(req, res) : res.status(401).send(reason);
+  }
+});
 
 export default router;

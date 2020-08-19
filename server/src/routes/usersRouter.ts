@@ -1,31 +1,18 @@
-import { Request, Response, Router, response } from "express";
-import axios from 'axios'
+import { Request, Response, Router } from "express";
 import User from "../models/userSchema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { IUserModel } from '../models/userModel'
+import { verifyFbAccessToken } from '../middlewares/verifyToken'
+import { IUser } from '../models/userModel'
 const router: Router = Router();
 
-//! 
-const verifyFbAccessToken = async (accessToken: string, userID: string):Promise<boolean>  => {
-    let result: boolean = false
-    try {//Check the userID via accessToken / and verify if the user id is the same as the on in the client
-     const res = await axios.get(`https://z-p3-graph.facebook.com/v2.3/me?access_token=${accessToken}&fields=name%2Cemail%2Cpicture&locale=en_US&method=get&pretty=0&sdk=joey&suppress_http_code=1`)
-     if (res.data.id === userID) {
-        result = true
-     }
-    } catch (err) {
-        console.log(err);
-        result = false
-    }
-    return result
-}
 
 const authWithFacebook = async (req:Request, res:Response) =>{
-    const { userID, name, accessToken, authType } = req.body;
-    //! Check if access token is valid - if valid continue else throw error message
-    if(await verifyFbAccessToken(accessToken, userID)){
-      User.findOne({ userID: userID })
+    const { fbUserID, name, authType } = req.body;    
+    const { isVerified, reason } = await verifyFbAccessToken(req);
+    
+    if(isVerified){
+      User.findOne({ fbUserID: fbUserID })
         .then((user) => {
           if (user) {
             //if exist return 200
@@ -33,7 +20,7 @@ const authWithFacebook = async (req:Request, res:Response) =>{
             res.status(200).send(user);
           } else {
             //else save userID and Name and then return 201
-            User.create({ userID, name, authType })
+            User.create({ fbUserID, name, authType })
               .then((user) => {
                 console.log("New FB user was added");
                 res.status(201).send(user);
@@ -46,7 +33,7 @@ const authWithFacebook = async (req:Request, res:Response) =>{
         })
         .catch((err) => console.log("Fail", err));
     }else{
-        res.status(400).send('access token is not valid')
+        res.status(400).send(reason)
     }
 }
 
@@ -55,7 +42,7 @@ router.post("/viafacebook",(req: Request, res: Response) => {
 });
 
 router.post("/signup",(req: Request, res: Response) => {
-  let { name, email, password, authType }:IUserModel = req.body;
+  let { name, email, password, authType }:IUser = req.body;
   
   User.findOne({ email }, (err, user) => {
     if (err) return res.status(400).send(err);
@@ -64,15 +51,7 @@ router.post("/signup",(req: Request, res: Response) => {
       bcrypt
         .hash(password, 10)
         .then((hashedPassword: string) => {
-          //create user
-          const user = new User({
-            name,
-            email,
-            authType,
-            password: hashedPassword,
-          });
-          user
-            .save()
+          User.create({ name, email, authType, password: hashedPassword })
             .then((newUser) => res.status(201).send(newUser))
             .catch((err) => res.status(400).send(err));
         })
@@ -84,30 +63,29 @@ router.post("/signup",(req: Request, res: Response) => {
 
 });
 
-interface LoginModel {
+interface ILoginModel {
   email: string;
   password: string;
 }
 
 router.post("/login",(req: Request, res: Response) => {
-  const { email, password }: LoginModel = req.body;
+  const { email, password }: ILoginModel = req.body;
 
  //check if the user exist in the db
- User.findOne({ email }, (err, user:IUserModel) => {
+ User.findOne({ email }, (err, user:IUser) => {
   if (err) return res.status(400).send(err);
   if (user) {
-    const { name, email, authType, _id } = user;
+    const { name, email,authType, _id , cars} = user;
     //check if password is correct
     bcrypt
       .compare(password, user.password)
       .then((result) => {
         if (result) {
           //create and assign token
-          let TOKEN_SECRET = "anythingiwant"; //todo - make this an env var later
+          let TOKEN_SECRET = "anythingiwant"; 
           const token = jwt.sign({ _id }, TOKEN_SECRET);
-          res
-            .header("auth-token", token)
-            .send({ name, authType, email, token , _id });
+          res.header("auth-token", token)
+            .send({ name, authType, email, token , _id ,cars});
         } else {
           return res.status(403).send("Incorrect password");
         }

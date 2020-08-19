@@ -5,9 +5,9 @@ import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../../contexts/auth.context";
 
 interface IUserData {
-  userID: string;
+  fbUserID: string;
   name: string;
-  accessToken:string;
+  token:string;
   authType:string;
 }
 
@@ -15,26 +15,31 @@ const LoginWithFacebook: React.FC = () => {
     const { user, dispatch } = useContext(AuthContext);
 
   const checkIfUserExistsInDB = (userData: IUserData, response: any) => {
-    axios
-      .post("/users/viafacebook", userData)
+    axios({
+      method: "post",
+      url: `/users/viafacebook`,
+      data: userData,
+      headers: {
+        Authorization: `Bearer ${userData.token}3`,
+        fbUserID: userData.fbUserID
+      },
+    })
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
-          console.log("res data", res.data);
-          localStorage.setItem("user", JSON.stringify(res.data));
+          localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));
           dispatch({type: "loggedIn"})
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response.data));
   };
 
   const componentClicked = (data: any) => {
-    console.log("data", data);
   };
 
   const responseFacebook = (response: any) => {
     if (response.status !== "unknown") {
-      const { userID, name, accessToken }: IUserData = response;
-      checkIfUserExistsInDB({ userID, name, accessToken, authType: 'facebook' }, response);
+      const { userID, name, accessToken  } = response;
+      checkIfUserExistsInDB({ fbUserID:userID, name, token :accessToken , authType: 'facebook' }, response);
     }
   };
 

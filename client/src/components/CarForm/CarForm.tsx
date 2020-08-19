@@ -1,9 +1,10 @@
-import React from "react";
+import React,{ useContext, useState } from "react";
 import Modal from "react-modal";
 import { useFormik } from "formik";
 import { ICar } from "../../models/ICar";
 import { IServerRequestsInfo } from "../../models/IServerRequestsInfo";
 import axios, { Method } from "axios";
+import { AuthContext } from "../../contexts/auth.context";
 import "./CarForm.css";
 
 //M-UI
@@ -29,11 +30,28 @@ const CarForm: React.FC<ICarForm> = ({
   method,
   setSelectedCar,
 }) => {
-  const handleSubmit: (values: ICar) => void = (values) => {
-    let { url, requestFunction } = serverRequestInfo;
 
-    url = initialValues ? `${url}/${initialValues._id}` : url;
-    axios({ method: method, url: url, data: values })
+  const { user } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSubmit = (values: ICar): void => {
+    let { url, requestFunction } = serverRequestInfo;
+    const { token, _id, authType} = JSON.parse(localStorage.user);
+    const postURL:string = `${url}/${authType}/${_id}`;
+    const editURL:string  = `${url}/${authType}/${initialValues!._id}`;
+    url = initialValues!._id ? editURL : postURL;
+
+    
+    if(checkImageURL(values.img)){
+    axios({
+      method: method,
+      url: url,
+      data: values,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        fbUserID: user.fbUserID
+      },
+    })
       .then((res) => {
         if (res.status === 201 || 200) {
           setCars(
@@ -48,18 +66,24 @@ const CarForm: React.FC<ICarForm> = ({
       })
       .catch((err) => console.log("Error", err));
     setSelectedCar(null);
+  }else{
+    setErrorMessage('Please use valid image URL')
+  }
   };
 
   if (!initialValues) {
     initialValues = {
       car: "",
       car_model: "",
-      car_model_year: "",
+      car_model_year: 1990,
       car_color:"",
       img: "",
       price: "",
       _id: "",
     };
+  }
+  const checkImageURL = (url:string):boolean => {
+      return url.match(/^http.*\.(jpeg|jpg|gif|png)$/) != null
   }
 
   const formik = useFormik({
@@ -81,6 +105,7 @@ const CarForm: React.FC<ICarForm> = ({
         formik.handleSubmit();
       }}
     >
+      <p>{errorMessage ? errorMessage : null}</p>
       <span
         className="CarForm_closeWindow"
         onClick={() => {
@@ -118,6 +143,7 @@ const CarForm: React.FC<ICarForm> = ({
         id="car_model_year"
         type="number"
         value={formik.values.car_model_year}
+        InputProps={{ inputProps: { min: 1990, max: 2020 } }}
         onChange={handleChange}
         required={true}
         name="car_model_year"
@@ -151,6 +177,7 @@ const CarForm: React.FC<ICarForm> = ({
         value={formik.values.img}
         onChange={handleChange}
         required={true}
+        type="url"
         name="img"
         inputProps={{ "data-testid": "car-form-input" }}
       />

@@ -6,7 +6,6 @@ import { Redirect, Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
 import '../Authentication.css'
-import { log } from "util";
 
 interface ISignUp {
   password: string;
@@ -22,7 +21,7 @@ const SignUp: React.FC = () => {
     if (values.password !== values.confirmPassword  ) {
       setErrorMessage('Passwords don`t match')
     }else{
-         values = {...values, authType: 'signupForm'}
+         values = {...values, authType: 'jwt'}
          axios.post('/users/signup',values)
          .then(res => {
            if(res.status === 201){
@@ -119,17 +118,18 @@ const SignUp: React.FC = () => {
           Sign Up
         </Button>
       </form>
+      <div className="Authentication_links"> 
       <Link to="/login">
       <Button
             data-testid="signup-form-submit-btn"
             variant="outlined"
-            type="submit"
             color="primary"
           >
             Already have an account ?
           </Button>
       </Link>
       <LoginWithFacebook />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
-import React from "react";
-import "./CarsCard.css";
+import React, { useEffect  ,useState, useContext } from "react";
 import { Method } from "axios";
+import "./CarsCard.css";
+import { AuthContext } from "../../contexts/auth.context";
 
 //Models
 import { ICar } from "../../models/ICar";
@@ -34,7 +35,18 @@ const CarCard: React.FC<ICarCard> = ({
   setFormModalIsOpen,
   deleteCar,
 }) => {
+
   const classes = useStyles();
+  const [isUsersCar, setIsUsersCar] = useState(false)
+  const { user } = useContext(AuthContext);
+
+useEffect(() => {
+  if(user.isLoggedIn){
+  const loggedInUserCars:string[] | [] = localStorage.user  ? JSON.parse(localStorage.user).cars : [];
+  const isItLoggedInUserCar = loggedInUserCars.find(carID => carID === car._id);  
+  setIsUsersCar(isItLoggedInUserCar ? true  : false)
+}
+}, [car,user.isLoggedIn])
 
   return (
     <Grid data-testid="car-card" item xs={12} className="CarsCard">
@@ -56,6 +68,7 @@ const CarCard: React.FC<ICarCard> = ({
             </Typography>
           </CardContent>
         </CardActionArea>
+        {isUsersCar ?
         <div>
           <Button
             variant="contained"
@@ -76,6 +89,7 @@ const CarCard: React.FC<ICarCard> = ({
             Delete
           </Button>
         </div>
+         : null}
       </Card>
     </Grid>
   );

@@ -90,6 +90,7 @@ const Login: React.FC = () => {
           Login
         </Button>
       </form>
+      <div className="Authentication_links">
       <Link to="/signup">
         <Button
           data-testid="signup-form-submit-btn"
@@ -101,6 +102,7 @@ const Login: React.FC = () => {
         </Button>
       </Link>
       <LoginWithFacebook />
+      </div>
     </div>
   );
 };

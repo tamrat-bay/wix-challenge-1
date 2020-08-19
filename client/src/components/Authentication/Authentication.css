@@ -7,3 +7,25 @@
     justify-content: center;
     height: 100vh;
 }
+.Authentication form {
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 40vw;
+    margin: 15px 0;
+    height: 42vh;
+    justify-content: space-around;
+}
+.Authentication .Authentication_links{
+    display: flex;
+}
+.Authentication .Authentication_links a{
+    display: block;
+    height: 100%;
+}
+.Authentication .Authentication_links  button{
+    display: block;
+    height: 100%;
+}

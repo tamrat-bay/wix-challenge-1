@@ -8,7 +8,8 @@ const reducer = (state:ILoginState, action:LoginAction) =>{
         return {
             ...state,
             isLoggedIn: true,
-            authType: JSON.parse(localStorage.user).authType
+            authType: JSON.parse(localStorage.user).authType,
+            fbUserID: JSON.parse(localStorage.user).fbUserID
           };
   
       case "logOut":
@@ -16,10 +17,9 @@ const reducer = (state:ILoginState, action:LoginAction) =>{
             ...state,
             isLoggedIn: false,
           };
-    
+  
       default:
         return state
-        break;
     }
   }
   

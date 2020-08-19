@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import FilterBar from "../FilterBar/FilterBar";
 import CarForm from "../CarForm/CarForm";
 import CarCard from "../CarCard/CarCard";
+import Loader from "../Loader/Loader";
 import axios from "axios";
 import { Method } from "axios";
 import Modal from "react-modal";
@@ -27,15 +28,26 @@ const CarsBoard: React.FC = () => {
   const [selectedCar, setSelectedCar] = useState<ICar | null>(null);
   const [formRequestMethod, setFormRequestMethod] = useState<Method>("post");
   const [formModalIsOpen, setFormModalIsOpen] = useState<boolean>(false);
-  const { user } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { user, dispatch } = useContext(AuthContext);
 
-  const deleteCar = (id: string): void => {
-    axios
-      .delete(`/cars/${id}`)
+  const deleteCar = (carID: string): void => {
+    setIsLoading(true)
+    const {token, _id} = JSON.parse(localStorage.user);
+    const url = `/cars/${user.authType}/${_id}/${carID}`
+    axios({
+      method: "delete",
+      url: url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        fbUserID: user.fbUserID
+      },
+    })
       .then((res) => {
         if (res.status === 200 && cars) {
-          let temp: ICar[] = cars.filter((car) => car._id !== id);
+          let temp: ICar[] = cars.filter((car) => car._id !== carID);
           setCars(temp);
+          setIsLoading(false)
         }
       })
       .catch((err) => console.log(err));
@@ -43,17 +55,33 @@ const CarsBoard: React.FC = () => {
 
   useEffect(() => {
     const getCars = () => {
-      axios
-        .get("/cars")
+      setIsLoading(true)
+      const token = user.isLoggedIn ? JSON.parse(localStorage.user).token : ''; //!modify
+      
+      axios({
+        method: "get",
+        url: `/cars/${user.authType}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          fbUserID: user.fbUserID 
+        },
+      })
         .then((res) => {
           if (res.status === 200) {
             setCars(res.data);
+            setIsLoading(false)
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {console.log(err); 
+          if(err.response.data === 'Invalid token'){
+              //logOut when token expires
+              dispatch({type : 'logOut'});
+              localStorage.clear()
+          }
+          });
     };
     getCars();
-  }, []);
+  }, [dispatch, user]);
 
   if (!user.isLoggedIn) return <Redirect to='/login' />;
   return (
@@ -104,6 +132,10 @@ const CarsBoard: React.FC = () => {
         />
       </Modal>
 
+     {isLoading
+      ? 
+      <Loader /> 
+      : 
       <div>
         <Grid container>
           {!filterFlag ? (
@@ -119,7 +151,7 @@ const CarsBoard: React.FC = () => {
                 />
               ))
             ) : (
-              <p>Loading Cars. . .</p>
+              <p>There are no available cars</p>
             )
           ) : filteredCars.length ? (
             (filteredCars as ICar[]).map((car: ICar, i: number) => (
@@ -137,6 +169,7 @@ const CarsBoard: React.FC = () => {
           )}
         </Grid>
       </div>
+      }
     </div>
   );
 };

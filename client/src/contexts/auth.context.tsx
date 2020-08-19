@@ -1,14 +1,16 @@
-import React, { createContext, useReducer, useState } from "react";
+import React, { createContext, useReducer } from "react";
 import authReducer from "../reducers/auth.reducer";
 import { ILoginState } from "../models/ILoginState";
 
-let isLoggedIn = localStorage.getItem("user") ? true : false;
+const isLoggedIn = localStorage.user ? true : false;
+const authType: string = isLoggedIn ? JSON.parse(localStorage.user).authType : '';
+const fbUserID: string = isLoggedIn ? JSON.parse(localStorage.user).fbUserID : '';
 
 const initialState: ILoginState = {
   name: "",
-  userID: "",
+  fbUserID: fbUserID,
   isLoading: false,
-  authType: "",
+  authType: authType,
   isLoggedIn: isLoggedIn,
 };
 

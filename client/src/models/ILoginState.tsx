@@ -1,6 +1,6 @@
 export interface ILoginState {
     name: string;
-    userID: string;
+    fbUserID: string;
     isLoading: boolean;
     authType: string;
     isLoggedIn: boolean;
