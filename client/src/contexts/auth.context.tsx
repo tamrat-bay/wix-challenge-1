@@ -14,7 +14,7 @@ const initialState: ILoginState = {
   isLoggedIn: isLoggedIn,
 };
 
-export const AuthContext: React.Context<any> = createContext(initialState);
+export const AuthContext: React.Context<any> = createContext(initialState); //try this {} as ILoginState
 
 export const AuthProvider = (props: { children: React.ReactNode }) => {
   const [user, dispatch] = useReducer(authReducer, initialState);

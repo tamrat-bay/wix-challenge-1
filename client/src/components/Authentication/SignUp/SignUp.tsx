@@ -1,39 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect, Link, useHistory  } from "react-router-dom";
+import { AuthContext } from "../../../contexts/auth.context";
+import "../Authentication.css";
+
 //M-UI
 import { TextField, Button } from "@material-ui/core";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
-import '../Authentication.css'
 
 interface ISignUp {
   password: string;
+  confirmPassword: string;
   name: string;
   email: string;
+  authType?: string;
 }
 
 const SignUp: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const history = useHistory();
+  const { user, dispatch } = useContext(AuthContext);
 
-  const handleSubmit: (values: any) => void = (values) => {
-    if (values.password !== values.confirmPassword  ) {
-      setErrorMessage('Passwords don`t match')
-    }else{
-         values = {...values, authType: 'jwt'}
-         axios.post('/users/signup',values)
-         .then(res => {
-           if(res.status === 201){
-            setIsSignedUp(true)
-           }
-         })
-         .catch(err => {console.log(err); setErrorMessage(err.response.data)})
+  const handleSubmit = (userData: ISignUp) => {
+    dispatch({ type: "loading" });
+
+    if (userData.password !== userData.confirmPassword) {
+      dispatch({ type: "error" });
+      return setErrorMessage("Passwords don`t match");
     }
-  };
 
-  const handleChange = (e: string | React.ChangeEvent<any>) => {
-    formik.handleChange(e);
+    userData = { ...userData, authType: "jwt" };
+    axios.post("/users/signup", userData)
+      .then((res) => {
+        if (res.status === 201) {
+          setIsSignedUp(true);
+          dispatch({ type: "loading" });
+          history.push('/login')
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setErrorMessage(err.response.data)
+        dispatch({ type: "error" });
+      });
+      
   };
 
   const formik = useFormik({
@@ -43,33 +55,40 @@ const SignUp: React.FC = () => {
       confirmPassword: "",
       email: "",
     },
-    onSubmit: (values) => {
-      handleSubmit(values);
-    },
+    onSubmit:handleSubmit
   });
 
-  if(isSignedUp) return <Redirect to="/login" />
+  const displayErrorIfNeeded = errorMessage ? <p className="Authentication_error">{errorMessage} </p> : null;
+  const submitBtnText = user.isLoading ? 'loading . . .' :  'Sign Up'
+
+  if (isSignedUp) return <Redirect to="/login" />;
 
   return (
     <div className="Authentication">
-        <h3>Sign up here</h3>
-      <form
-        data-testid="signup-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          formik.handleSubmit();
-        }}
-      >
-        {errorMessage ? <p className="auth_error">{errorMessage} </p> : null }
+      <form data-testid="signup-form" onSubmit={formik.handleSubmit}>
+        {displayErrorIfNeeded}
         <TextField
           id="name"
           fullWidth
           label="User Name"
           placeholder="John Doe"
           value={formik.values.name}
-          onChange={handleChange}
+          onChange={formik.handleChange}
           required={true}
           name="name"
+          inputProps={{ "data-testid": "signup-form-input" }}
+        />
+        <TextField
+          id="email"
+          fullWidth
+          label="email"
+          placeholder="johndoe@test.com"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          required={true}
+          name="email"
+          type="email"
+          autoComplete="true"
           inputProps={{ "data-testid": "signup-form-input" }}
         />
         <TextField
@@ -77,7 +96,7 @@ const SignUp: React.FC = () => {
           fullWidth
           label="Password"
           value={formik.values.password}
-          onChange={handleChange}
+          onChange={formik.handleChange}
           required={true}
           name="password"
           type="password"
@@ -89,24 +108,11 @@ const SignUp: React.FC = () => {
           fullWidth
           label="Confirm Password"
           value={formik.values.confirmPassword}
-          onChange={handleChange}
+          onChange={formik.handleChange}
           required={true}
           name="confirmPassword"
           type="password"
           autoComplete="false"
-          inputProps={{ "data-testid": "signup-form-input" }}
-        />
-        <TextField
-          id="email"
-          fullWidth
-          label="email"
-          placeholder="johndoe@test.com"
-          value={formik.values.email}
-          onChange={handleChange}
-          required={true}
-          name="email"
-          type="email"
-          autoComplete="true"
           inputProps={{ "data-testid": "signup-form-input" }}
         />
         <Button
@@ -115,20 +121,20 @@ const SignUp: React.FC = () => {
           type="submit"
           color="primary"
         >
-          Sign Up
+          {submitBtnText}
         </Button>
       </form>
-      <div className="Authentication_links"> 
-      <Link to="/login">
-      <Button
+      <div className="Authentication_links">
+        <Link to="/login">
+          <Button
             data-testid="signup-form-submit-btn"
             variant="outlined"
             color="primary"
           >
             Already have an account ?
           </Button>
-      </Link>
-      <LoginWithFacebook />
+        </Link>
+        <LoginWithFacebook btnText="Sign Up With Facebook" />
       </div>
     </div>
   );

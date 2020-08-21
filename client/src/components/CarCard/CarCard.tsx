@@ -42,9 +42,9 @@ const CarCard: React.FC<ICarCard> = ({
 
 useEffect(() => {
   if(user.isLoggedIn){
-  const loggedInUserCars:string[] | [] = localStorage.user  ? JSON.parse(localStorage.user).cars : [];
-  const isItLoggedInUserCar = loggedInUserCars.find(carID => carID === car._id);  
-  setIsUsersCar(isItLoggedInUserCar ? true  : false)
+  const carsOwnedByUser:string[] | [] = localStorage.user  ? JSON.parse(localStorage.user).cars : [];
+  const isCarOwnedByUser = carsOwnedByUser.find(carID => carID === car._id);  
+  setIsUsersCar(isCarOwnedByUser ? true  : false)
 }
 }, [car,user.isLoggedIn])
 
@@ -69,7 +69,7 @@ useEffect(() => {
           </CardContent>
         </CardActionArea>
         {isUsersCar ?
-        <div>
+        <div className="CarCard_actions">
           <Button
             variant="contained"
             color="primary"

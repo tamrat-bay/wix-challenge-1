@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import FacebookLogin from "react-facebook-login";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Redirect,  useHistory } from "react-router-dom";
 import { AuthContext } from "../../../contexts/auth.context";
 
 interface IUserData {
@@ -10,36 +10,41 @@ interface IUserData {
   token:string;
   authType:string;
 }
-
-const LoginWithFacebook: React.FC = () => {
+interface ILoginWithFacebook{
+  btnText:string;
+}
+const LoginWithFacebook: React.FC<ILoginWithFacebook> = ({btnText}) => {
     const { user, dispatch } = useContext(AuthContext);
+    const history = useHistory();
 
-  const checkIfUserExistsInDB = (userData: IUserData, response: any) => {
+  const authFacebookUser = (userData: IUserData) => {
+    dispatch({type: "loading"})
     axios({
       method: "post",
-      url: `/users/viafacebook`,
+      url: `/users/${userData.authType}`,
       data: userData,
       headers: {
-        Authorization: `Bearer ${userData.token}3`,
+        Authorization: `Bearer ${userData.token}`,
         fbUserID: userData.fbUserID
       },
     })
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200 || res.status === 201) {
-          localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));
+         await localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));          
           dispatch({type: "loggedIn"})
+          history.push('/carsboard')
         }
       })
       .catch((err) => console.log(err.response.data));
   };
 
-  const componentClicked = (data: any) => {
-  };
+ type FacebookResponse = { status: string; userID: string ; name: string; accessToken: string; }
 
-  const responseFacebook = (response: any) => {
+  const responseFacebook = (response: FacebookResponse) => {
     if (response.status !== "unknown") {
       const { userID, name, accessToken  } = response;
-      checkIfUserExistsInDB({ fbUserID:userID, name, token :accessToken , authType: 'facebook' }, response);
+      const userData = { fbUserID: userID, name, token: accessToken , authType: 'facebook' };
+      authFacebookUser(userData);
     }
   };
 
@@ -48,10 +53,9 @@ const LoginWithFacebook: React.FC = () => {
   return (
     <div>
       <FacebookLogin
+        textButton={btnText} 
         appId="392408751721540"
-        autoLoad={false}
         fields="name,email,picture"
-        onClick={componentClicked}
         callback={responseFacebook}
       />
     </div>

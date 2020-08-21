@@ -7,6 +7,7 @@ import {
   sortCarsByPricesLowToHigh,
   sortCarsByPricesHighToLow,
   sortCarsByNewestYear,
+  getUniqueBrandNames
 } from "./filterAndSortFunctions";
 
 //Models
@@ -14,7 +15,6 @@ import { ICar } from "../../models/ICar";
 
 //M-Ui
 import {
-  TextField,
   Button,
   Slider,
   Typography,
@@ -30,7 +30,6 @@ interface IFilterBar {
   setFilteredCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
   setFilterFlag: React.Dispatch<React.SetStateAction<boolean>>;
   filterFlag: boolean;
-
 }
 
 const FilterBar: React.FC<IFilterBar> = ({
@@ -44,7 +43,8 @@ const FilterBar: React.FC<IFilterBar> = ({
   const [years, setYears] = useState<number[]>([1990, 2020]);
   const [brand, setBrand] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("Choose");
-
+  const brandNames = getUniqueBrandNames(cars);
+  
   const sortHandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const { value } = event.target 
     setSortBy(value as string);
@@ -71,9 +71,7 @@ const FilterBar: React.FC<IFilterBar> = ({
     setYears(newValue as number[]);
   };
 
-  const brandHandelChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const brandHandelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     setBrand(value);
   };
@@ -86,27 +84,39 @@ const FilterBar: React.FC<IFilterBar> = ({
     if (brand) return setFilteredCars(filterCarsByBrand(brand, cars)) 
     if (years) return setFilteredCars(filterCarsByYears(years, cars)) 
   };
- 
-
+  
+  const sortInputValue = sortBy ? sortBy : "Choose";
+  const brandInputValue = brand ? brand : "Choose";
+  
   return (
     <div data-testid="filter-bar" className="FilterBar">
-      <form noValidate autoComplete="off" onSubmit={(e) => submitForm(e)}>
+      <form  autoComplete="off" onSubmit={(e) => submitForm(e)}>
         <div className="FilterBar_selectors">
-          <TextField
-            id="brand"
-            name="brand"
-            label="Brand Name"
-            defaultValue={brand}
-            color="secondary"
-            onChange={(e) => brandHandelChange(e)}
-            inputProps={{ "data-testid": "filter-bar-input" }}
-          />
-
+          <FormControl>
+            <InputLabel htmlFor="demo-customized-Input-native">
+              Car Brand
+            </InputLabel>
+            <NativeSelect
+              id="demo-customized-select-native"
+              value={brandInputValue}
+              onChange={brandHandelChange}
+            >
+              <option disabled aria-label="Brand name" value="Choose">
+                Choose
+              </option>
+              {brandNames.map((name,i) => (
+                <option key={i} aria-label="Sort By" value={name}>
+                  {name}
+                </option>
+              ))}
+            </NativeSelect>
+          </FormControl>
           <div className="FilterBar_yearsSlider">
             <Typography id="range-slider" gutterBottom>
               Years Range
             </Typography>
-            <Slider style={{zIndex : 0}}
+            <Slider
+              style={{ zIndex: 0 }}
               min={1990}
               max={2020}
               value={years}
@@ -121,7 +131,7 @@ const FilterBar: React.FC<IFilterBar> = ({
             </InputLabel>
             <NativeSelect
               id="demo-customized-select-native"
-              value={sortBy ? sortBy : "Choose"}
+              value={sortInputValue}
               onChange={sortHandleChange}
             >
               <option disabled aria-label="Sort By" value="Choose">

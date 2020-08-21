@@ -13,20 +13,27 @@
     display: flex;
     justify-content: space-around;
     margin: 25px auto;
-    width: 95%;
     box-shadow: 1px 1px 3px;
     padding: 10px;
 }
 .FilterBar_yearsSlider{
-    width: 225px;
+    width: 200px;
+}
+.FilterBar .MuiNativeSelect-select.MuiNativeSelect-select {
+    width: 120px;
+}
+.FilterBar .MuiSlider-root {
+    color: #0f4c75;
 }
 
 @media screen and (max-width: 730px) {
     .FilterBar_selectors{
         flex-direction: column;
         align-items: center;
+        width: 85vw;
     }
     .FilterBar_yearsSlider{
        margin-top: 40px;
+       width: 160px;
     }
  }

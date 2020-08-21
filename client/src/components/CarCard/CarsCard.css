@@ -4,6 +4,12 @@
     justify-content: space-between;
     margin-bottom: 20px;
 }
+.CarCard_actions{
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-evenly;
+}
 
 @media screen and (max-width: 470px) {
 .CarsCard .MuiCardActionArea-root {

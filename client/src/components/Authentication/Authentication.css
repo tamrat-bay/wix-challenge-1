@@ -5,27 +5,46 @@
     margin: 0 auto;
     align-items: center;
     justify-content: center;
-    height: 100vh;
 }
 .Authentication form {
     border: 1px solid black;
-    border-radius: 20px;
-    padding: 20px;
     display: flex;
     flex-direction: column;
     width: 40vw;
     margin: 15px 0;
-    height: 42vh;
-    justify-content: space-around;
+    height: 50vh;
+    padding: 15px 25px 15px 25px;
+    justify-content: space-evenly;
+    border-radius: 33px;
+    box-shadow: 0px 1px 5px;
 }
 .Authentication .Authentication_links{
     display: flex;
+    width: 40vw;
+    justify-content:space-between;
 }
 .Authentication .Authentication_links a{
     display: block;
     height: 100%;
 }
+.Authentication_error {
+    margin: 5px;
+    font-style: oblique;
+    letter-spacing: 1px;
+    color: #df0000;
+    font-weight: 500;
+    text-decoration: underline;
+}
 .Authentication .Authentication_links  button{
     display: block;
     height: 100%;
+    border-radius: 35px;
+}
+@media screen and (max-width: 650px) {
+    .Authentication form {
+        width: 65vw;
+    }
+    .Authentication .Authentication_links{
+        width: 90vw;
+    }
 }

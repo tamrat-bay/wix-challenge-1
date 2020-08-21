@@ -2,3 +2,32 @@
     color: white;
     text-decoration: none;
 }
+
+.Navbar nav{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.Navbar nav span.Navbar_status_links{
+    width: 105px;
+    display: flex;
+    justify-content: space-between;
+}
+.Navbar .MuiAppBar-colorPrimary {
+    background-color: #1b262c;
+}
+
+@media screen and (max-width: 335px) {
+    .Navbar nav span.Navbar_status_links {
+        width: 130px;
+        flex-direction: column;
+        align-self: center;
+    }
+  }
+@media screen and (max-width: 450px) {
+    .Navbar nav{
+        width: 100%;
+    }
+  }

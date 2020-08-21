@@ -8,12 +8,7 @@ import { Method } from "axios";
 import Modal from "react-modal";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth.context";
-import {
-  editServerRequestInfo,
-  postServerRequestInfo,
-} from "../../utils/serverRequestsInfo";
 import "./CarsBoard.css";
-
 
 //Models
 import { ICar } from "../../models/ICar";
@@ -33,7 +28,7 @@ const CarsBoard: React.FC = () => {
 
   const deleteCar = (carID: string): void => {
     setIsLoading(true)
-    const {token, _id} = JSON.parse(localStorage.user);
+    const {token, _id} = JSON.parse(localStorage.user); //todo=> change  to user ID
     const url = `/cars/${user.authType}/${_id}/${carID}`
     axios({
       method: "delete",
@@ -56,11 +51,11 @@ const CarsBoard: React.FC = () => {
   useEffect(() => {
     const getCars = () => {
       setIsLoading(true)
-      const token = user.isLoggedIn ? JSON.parse(localStorage.user).token : ''; //!modify
+      const {token, authType} = localStorage.user ? JSON.parse(localStorage.user) : dispatch({type : 'logOut'}); //!modify
       
       axios({
         method: "get",
-        url: `/cars/${user.authType}`,
+        url: `/cars/${authType}`,
         headers: {
           Authorization: `Bearer ${token}`,
           fbUserID: user.fbUserID 
@@ -74,19 +69,20 @@ const CarsBoard: React.FC = () => {
         })
         .catch((err) => {console.log(err); 
           if(err.response.data === 'Invalid token'){
-              //logOut when token expires
               dispatch({type : 'logOut'});
               localStorage.clear()
           }
           });
     };
-    getCars();
+    if (user.isLoggedIn) {getCars();}
+      
+    
   }, [dispatch, user]);
-
+  
   if (!user.isLoggedIn) return <Redirect to='/login' />;
   return (
     <div data-testid="cars-board" className="CarsBoard">
-      <div>
+      <div className="CarsBoard_addBtn">
         <Button
           variant="contained"
           color="primary"
@@ -123,11 +119,8 @@ const CarsBoard: React.FC = () => {
           cars={cars}
           initialValues={selectedCar}
           setSelectedCar={setSelectedCar}
-          serverRequestInfo={
-            formRequestMethod === "post"
-              ? postServerRequestInfo
-              : editServerRequestInfo
-          }
+          filterFlag={filterFlag}                               
+          setFilteredCars={setFilteredCars}
           setFormModalIsOpen={setFormModalIsOpen}
         />
       </Modal>

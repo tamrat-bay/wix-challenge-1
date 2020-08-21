@@ -7,9 +7,11 @@
     "dev": "cd server && npm run dev",
     "client-install": "cd client && npm install",
     "server-install": "cd server && npm install",
-    "build": "cd client && npm run build",
+    "build-client": "cd client && npm run build",
+    "build-server": "cd server && npm run build",
+    "build-all": "npm run build-client && npm run build-server",
     "install-all": "npm run client-install && npm run server-install",
-    "heroku-postbuild": "npm run install-all && npm run build",
+    "heroku-postbuild": "npm run install-all && npm run build-all",
     "start": "cd server && npm start"
   },
   "engines": {

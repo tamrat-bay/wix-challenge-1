@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+  max-height: 100vh;
 }
 
+.App_container {
+  margin: 64px 0 0 0;
+  height: calc(100vh - 64px);
+  display: flex;
+  padding: 20px;
+  box-sizing: border-box;
+}
 

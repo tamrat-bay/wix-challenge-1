@@ -34,7 +34,7 @@ const sortCarsByPricesLowToHigh = (cars: ICar[]): ICar[] => {
 };
 
 const sortCarsByPricesHighToLow = (cars: ICar[]): ICar[] => {
-  const sortedByPrice = cars.sort((carA, carB) => (carB.price as number) - (carA.price  as numbe));
+  const sortedByPrice = cars.sort((carA, carB) => (carB.price as number) - (carA.price  as number));
   return sortedByPrice;
 };
 
@@ -44,6 +44,10 @@ const sortCarsByNewestYear = (cars: ICar[]): ICar[] => {
   );
   return sortedByYears;
 };
+const getUniqueBrandNames = (cars: ICar[]): string[] => {
+  const brandNames = [...new Set(cars)].map(c => c.car)
+  return brandNames;
+};
 
 export {
   filterCarsByBrand,
@@ -52,4 +56,5 @@ export {
   sortCarsByPricesLowToHigh,
   sortCarsByPricesHighToLow,
   sortCarsByNewestYear,
+  getUniqueBrandNames,
 };

@@ -1,6 +1,5 @@
 .CarsBoard{    
-    box-sizing: border-box;
-    margin-top: 80px;
+    margin: 0 auto;
 }
 
 .CarsBoard .MuiGrid-container {
@@ -9,10 +8,16 @@
     padding: 60px 20px;
     margin: 0 auto;
 }
+.CarsBoard_addBtn{
+    display: flex;
+}
+.CarsBoard_addBtn button{
+    background-color: #3282b8;
+}
 
 @media screen and (max-width: 700px) {
     .CarsBoard .MuiGrid-container {
-        width: 95vw;
+        width: 85vw;
         padding: 60px 10px;
     }
   }
