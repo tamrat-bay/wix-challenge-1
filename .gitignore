@@ -4,6 +4,6 @@
 /server/apiTest.rest
 
 # production
-/server/dist
-/server/.env
+# /server/dist
+# /server/.env
 
