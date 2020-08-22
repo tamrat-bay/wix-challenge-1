@@ -11,7 +11,7 @@
     "build-server": "cd server && npm run tsc  -p .",
     "build-all": "npm run build-client && npm run build-server",
     "install-all": "npm run client-install && npm run server-install",
-    "heroku-postbuild": "npm run install-all && npm run build-all",
+    "heroku-postbuild": "npm run install-all && npm run build-client",
     "start": "cd server && npm start"
   },
   "engines": {
