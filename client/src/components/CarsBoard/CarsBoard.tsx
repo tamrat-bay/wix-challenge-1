@@ -25,7 +25,11 @@ const CarsBoard: React.FC = () => {
   const [formModalIsOpen, setFormModalIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user, dispatch } = useContext(AuthContext);
-
+  
+  const deleteCarFromState = (carsState,setCarsState,carID) => {
+    let temp: ICar[] = carsState.filter((car) => car._id !== carID);
+    setCarsState(temp);
+  }
   const deleteCar = (carID: string): void => {
     setIsLoading(true)
     const {token, _id} = JSON.parse(localStorage.user); //todo=> change  to user ID
@@ -35,14 +39,16 @@ const CarsBoard: React.FC = () => {
       url: url,
       headers: {
         Authorization: `Bearer ${token}`,
-        fbUserID: user.fbUserID
+        fbUserID: user.fbUserID,
       },
     })
       .then((res) => {
-        if (res.status === 200 && cars) {
-          let temp: ICar[] = cars.filter((car) => car._id !== carID);
-          setCars(temp);
-          setIsLoading(false)
+        if (res.status === 200 && cars.length) {
+          deleteCarFromState(cars, setCars, carID);
+          if (filterFlag) {
+            deleteCarFromState(filteredCars, setFilteredCars, carID);
+          }
+          setIsLoading(false);
         }
       })
       .catch((err) => console.log(err));

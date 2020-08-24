@@ -57,6 +57,7 @@ const LoginWithFacebook: React.FC<ILoginWithFacebook> = ({btnText}) => {
         appId="392408751721540"
         fields="name,email,picture"
         callback={responseFacebook}
+        isMobile={false}      
       />
     </div>
   );

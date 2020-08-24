@@ -44,6 +44,7 @@ const sortCarsByNewestYear = (cars: ICar[]): ICar[] => {
   );
   return sortedByYears;
 };
+
 const getUniqueBrandNames = (cars: ICar[]): string[] => {
   const brandNames = [...new Set(cars)].map(c => c.car)
   return brandNames;

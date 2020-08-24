@@ -9,6 +9,8 @@ interface IFacebookAuth {
   name: string;
   authType: string;
 }
+const authErrorMessage = "We didn't recognize the email or password you entered. Please try again"
+
 const authWithFacebook = async (req: Request, res: Response) => {
   const { fbUserID, name, authType }: IFacebookAuth = req.body;
 
@@ -80,7 +82,7 @@ const loginJwtUser = (req: Request, res: Response) => {
               .header("auth-token", token)
               .send({ name, authType, email, token, _id, cars });
           } else {
-            return res.status(403).send("Incorrect password");
+            return res.status(403).send(authErrorMessage);
           }
         })
         .catch((err) =>
@@ -89,7 +91,7 @@ const loginJwtUser = (req: Request, res: Response) => {
             .send("Internal server issue")
         );
     } else {
-      return res.status(400).send("User not found");
+      return res.status(400).send(authErrorMessage);
     }
   });
 };

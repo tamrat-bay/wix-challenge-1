@@ -16,6 +16,7 @@ exports.signupJwtUser = exports.loginJwtUser = exports.authWithFacebook = void 0
 const userSchema_1 = __importDefault(require("../models/userSchema"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const authErrorMessage = "We didn't recognize the email or password you entered. Please try again";
 const authWithFacebook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { fbUserID, name, authType } = req.body;
     userSchema_1.default.findOne({ fbUserID: fbUserID })
@@ -81,7 +82,7 @@ const loginJwtUser = (req, res) => {
                         .send({ name, authType, email, token, _id, cars });
                 }
                 else {
-                    return res.status(403).send("Incorrect password");
+                    return res.status(403).send(authErrorMessage);
                 }
             })
                 .catch((err) => res
@@ -89,7 +90,7 @@ const loginJwtUser = (req, res) => {
                 .send("Internal server issue"));
         }
         else {
-            return res.status(400).send("User not found");
+            return res.status(400).send(authErrorMessage);
         }
     });
 };
