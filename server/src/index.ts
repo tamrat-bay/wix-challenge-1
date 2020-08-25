@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import mongoose from "mongoose";
 import path from "path";
-import { config } from "dotenv";
 import carsRouter from "./routes/carsRouter";
 import usersRouter from "./routes/usersRouter";
 
@@ -9,9 +8,8 @@ const app: Application = express();
 const Port: number | string = process.env.PORT || 5000;
 
 app.use(express.json());
-config();
 
-const mongoURL: string = process.env.DB_URL || "localhost";
+const mongoURL = "mongodb+srv://tamrat:87654321@mybudget-ajn0y.mongodb.net/wix-cars?retryWrites=true&w=majority";
 
 mongoose
   .connect(mongoURL, {

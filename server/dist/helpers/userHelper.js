@@ -35,7 +35,7 @@ const authWithFacebook = (req, res) => __awaiter(void 0, void 0, void 0, functio
             });
         }
     })
-        .catch((err) => console.log("Fail", err));
+        .catch((err) => console.log(err));
 });
 exports.authWithFacebook = authWithFacebook;
 const signupJwtUser = (req, res) => {

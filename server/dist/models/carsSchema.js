@@ -28,10 +28,7 @@ const carSchema = new mongoose_1.default.Schema({
         required: true,
     },
     availability: Boolean,
-    img: {
-        type: String,
-        required: true,
-    },
+    img: String
 });
 const Cars = mongoose_1.default.model("cars", carSchema);
 exports.default = Cars;
