@@ -4,8 +4,8 @@ import { IServerRequestsInfo } from "../../models/IServerRequestsInfo";
 const url = '/cars'
 
 const editCarUrlAndResponseFunction: IServerRequestsInfo = {
-    url,
-    responseFunction: (cars: ICar[], newCar: ICar, id : string | null = null ): ICar[] => {
+    urlBuilder:(authType,carId) =>  `${url}/${authType}/${carId}`,
+    responseHandler: (cars: ICar[], newCar: ICar, id : string | null = null ): ICar[] => {
         const index: number = cars.findIndex((car) => car._id === id);
         let updatedCars: ICar[] = [...cars]
         updatedCars[index] = newCar 
@@ -14,8 +14,8 @@ const editCarUrlAndResponseFunction: IServerRequestsInfo = {
 }
 
 const postCarUrlAndResponseFunction: IServerRequestsInfo = {
-    url,
-    responseFunction: (cars: ICar[], newCar: ICar, id : string | null = null): ICar[] => {        
+    urlBuilder:(authType,userID) =>  `${url}/${authType}/${userID}`,
+    responseHandler: (cars: ICar[], newCar: ICar, id : string | null = null): ICar[] => {        
         let updatedCars: ICar[] = [newCar, ...cars]
         let carsOwnedByUser:string[] = JSON.parse(localStorage.user).cars;
          carsOwnedByUser = [newCar._id,...carsOwnedByUser]

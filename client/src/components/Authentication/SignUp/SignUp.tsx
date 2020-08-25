@@ -6,7 +6,7 @@ import { AuthContext } from "../../../contexts/auth.context";
 import "../Authentication.css";
 
 //M-UI
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, Grid } from "@material-ui/core";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
 
 interface ISignUp {
@@ -64,7 +64,7 @@ const SignUp: React.FC = () => {
   if (isSignedUp) return <Redirect to="/login" />;
 
   return (
-    <div className="Authentication">
+    <Grid item={true} md={4} sm={6} xs={10} className="Authentication">
       <form data-testid="signup-form" onSubmit={formik.handleSubmit}>
         {displayErrorIfNeeded}
         <TextField
@@ -101,6 +101,7 @@ const SignUp: React.FC = () => {
           name="password"
           type="password"
           autoComplete="false"
+          InputProps={{ inputProps: { minLength : 3 } }}
           inputProps={{ "data-testid": "signup-form-input" }}
         />
         <TextField
@@ -136,7 +137,7 @@ const SignUp: React.FC = () => {
         </Link>
         <LoginWithFacebook btnText="Sign Up With Facebook" />
       </div>
-    </div>
+    </Grid>
   );
 };
 

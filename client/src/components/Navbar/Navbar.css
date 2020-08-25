@@ -18,6 +18,12 @@
 .Navbar .MuiAppBar-colorPrimary {
     background-color: #1b262c;
 }
+.Navbar .fa, .fas {
+    font-size: 1.8em;
+}
+.Navbar_authMenu_link{
+    color: black !important;
+}
 
 @media screen and (max-width: 335px) {
     .Navbar nav span.Navbar_status_links {

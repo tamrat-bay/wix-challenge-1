@@ -10,7 +10,7 @@
     border: 1px solid black;
     display: flex;
     flex-direction: column;
-    width: 40vw;
+    width: 100%;
     margin: 15px 0;
     height: 50vh;
     padding: 15px 25px 15px 25px;
@@ -20,12 +20,12 @@
 }
 .Authentication .Authentication_links{
     display: flex;
-    width: 40vw;
+    flex-direction: column;
     justify-content:space-between;
 }
 .Authentication .Authentication_links a{
     display: block;
-    height: 100%;
+    margin: 5px 0;
 }
 .Authentication_error {
     margin: 5px;
@@ -36,15 +36,6 @@
     text-decoration: underline;
 }
 .Authentication .Authentication_links  button{
-    display: block;
-    height: 100%;
-    border-radius: 35px;
-}
-@media screen and (max-width: 650px) {
-    .Authentication form {
-        width: 65vw;
-    }
-    .Authentication .Authentication_links{
-        width: 90vw;
-    }
+    border-radius: 8px;
+    margin: 0 auto;
 }

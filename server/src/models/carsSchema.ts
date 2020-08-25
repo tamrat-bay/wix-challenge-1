@@ -24,10 +24,7 @@ const carSchema = new mongoose.Schema({
     required: true,
   },
   availability: Boolean,
-  img: {
-    type: String,
-    required: true,
-  },
+  img:String
 });
 
 const Cars = mongoose.model("cars", carSchema);

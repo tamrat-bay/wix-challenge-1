@@ -14,6 +14,13 @@ const filterCarsByYears = (years: number[], cars: ICar[]): ICar[] => {
   );
   return filteredCars;
 };
+const filterCarsByPrices = (prices: number[], cars: ICar[]): ICar[] => {
+  const filteredCars: ICar[] = cars.filter(
+    (car: ICar) =>
+     prices[0] <= car.price && prices[1] >= car.price
+  );  
+  return filteredCars;
+};
 
 const filterCarsByBrandAndYears = (
   brand: string,
@@ -51,8 +58,8 @@ const getUniqueBrandNames = (cars: ICar[]): string[] => {
 };
 
 export {
-  filterCarsByBrand,
   filterCarsByYears,
+  filterCarsByPrices,
   filterCarsByBrandAndYears,
   sortCarsByPricesLowToHigh,
   sortCarsByPricesHighToLow,

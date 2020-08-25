@@ -29,7 +29,7 @@ const authWithFacebook = async (req: Request, res: Response) => {
             });
         }
       })
-      .catch((err) => console.log("Fail", err));
+      .catch((err) => console.log(err));
 
 };
 

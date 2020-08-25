@@ -7,8 +7,7 @@ import axios from "axios";
 import "../Authentication.css";
 
 //M-UI
-import { TextField, Button } from "@material-ui/core";
-
+import { TextField, Button, Grid } from "@material-ui/core";
 
 
 const Login: React.FC = () => {
@@ -52,7 +51,7 @@ const Login: React.FC = () => {
   if (user.isLoggedIn) return <Redirect to="/" />;
 
   return (
-    <div className="Authentication">
+    <Grid item={true} md={4} sm={6} xs={10} className="Authentication">
       <form data-testid="Login-form" onSubmit={formik.handleSubmit}>
         {displayErrorIfNeeded}
         <TextField
@@ -102,7 +101,7 @@ const Login: React.FC = () => {
         </Link>
         <LoginWithFacebook btnText="Login With Facebook" />
       </div>
-    </div>
+    </Grid>
   );
 };
 

@@ -34,6 +34,7 @@ const CarsBoard: React.FC = () => {
     setIsLoading(true)
     const {token, _id} = JSON.parse(localStorage.user); //todo=> change  to user ID
     const url = `/cars/${user.authType}/${_id}/${carID}`
+    
     axios({
       method: "delete",
       url: url,
@@ -43,7 +44,7 @@ const CarsBoard: React.FC = () => {
       },
     })
       .then((res) => {
-        if (res.status === 200 && cars.length) {
+        if (res.status === 200) {
           deleteCarFromState(cars, setCars, carID);
           if (filterFlag) {
             deleteCarFromState(filteredCars, setFilteredCars, carID);
@@ -57,7 +58,7 @@ const CarsBoard: React.FC = () => {
   useEffect(() => {
     const getCars = () => {
       setIsLoading(true)
-      const {token, authType} = localStorage.user ? JSON.parse(localStorage.user) : dispatch({type : 'logOut'}); //!modify
+      const {token, authType} = localStorage.user ? JSON.parse(localStorage.user) : dispatch({type : 'logOut'}); 
       
       axios({
         method: "get",
@@ -109,7 +110,6 @@ const CarsBoard: React.FC = () => {
         filterFlag={filterFlag}
         cars={cars}
       />
-
       <Modal
         data-testid="car-form"
         isOpen={formModalIsOpen}
@@ -130,7 +130,6 @@ const CarsBoard: React.FC = () => {
           setFormModalIsOpen={setFormModalIsOpen}
         />
       </Modal>
-
      {isLoading
       ? 
       <Loader /> 
