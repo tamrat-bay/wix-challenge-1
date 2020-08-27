@@ -2,9 +2,9 @@ import React,{ useContext, useState } from "react";
 import Modal from "react-modal";
 import { useFormik } from "formik";
 import { ICar } from "../../models/ICar";
-import axios, { Method } from "axios";
+import { Method } from "axios";
 import { AuthContext } from "../../contexts/auth.context";
-import { editCarUrlAndResponseFunction, postCarUrlAndResponseFunction } from './formRequestHelper'
+import { postCarResponseHandler, editCarResponseHandler, editAndPostRequestHandler } from './CarFormHelper'
 import "./CarForm.css";
 
 //M-UI
@@ -17,8 +17,8 @@ interface ICarForm {
   initialValues: ICar | null;
   setSelectedCar: React.Dispatch<React.SetStateAction<ICar | null>>;
   cars: ICar[] | [];
-  filterFlag: boolean
-  setFilteredCars: React.Dispatch<React.SetStateAction<ICar[] | []>>
+  filterFlag?: boolean
+  setFilteredCars?: React.Dispatch<React.SetStateAction<ICar[] | []>>
 }
 
 Modal.setAppElement("#root");
@@ -35,38 +35,36 @@ const CarForm: React.FC<ICarForm> = ({
 
   const { user } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const isPostMethod = method === 'post'
-  let { urlBuilder, responseHandler } = isPostMethod ? postCarUrlAndResponseFunction : editCarUrlAndResponseFunction
+  let { urlBuilder, responseHandler } = isPostMethod ? postCarResponseHandler : editCarResponseHandler
 
-  const handleSubmit = (formValues: ICar): void => {
-    const { token, _id, authType} = JSON.parse(localStorage.user);
+  const handleSubmit =  (formValues: ICar): void => {
+    const { _id, authType } = JSON.parse(localStorage.user);
     const postURL:string = urlBuilder(authType,_id);
     const editURL:string = urlBuilder(authType,initialValues!._id);
     const url = isPostMethod ? postURL : editURL;
+    setIsLoading(true)
+    if(formValues.img && !checkImageURL(formValues.img)) return setErrorMessage('Please use valid image URL');
 
-    if(formValues.img && !checkImageURL(formValues.img)) return setErrorMessage('Please use valid image URL')
-
-    axios({
-      method: method,
-      url: url,
-      data: formValues,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        fbUserID: user.fbUserID
-      },
-    })
-      .then((res) => {
-        if (res.status === 201 || 200) {
-          const carID = initialValues ? initialValues._id : null
-          const updatedCars = responseHandler(cars, res.data, carID)
-          setCars(updatedCars);
-          if(filterFlag) {setFilteredCars(updatedCars)}
-          setFormModalIsOpen(false);
+    editAndPostRequestHandler(method, formValues, user.fbUserID, url)
+      .then(res=> {
+        if(res.status === 200 || res.status === 201){
+            const carID = initialValues ? initialValues._id : null;
+            const updatedCars = responseHandler(cars, res.data, carID);
+            setCars(updatedCars);
+            if (filterFlag) {setFilteredCars!(updatedCars)}
+            setFormModalIsOpen(false);
+        }else{
+           console.log(res)//res = error
         }
-      })
-      .catch((err) => console.log(err));
-    setSelectedCar(null);
+        setSelectedCar(null);
+        setIsLoading(false)
+        });
+      
   };
+
+  const submitBtnText = isLoading ? 'Loading . . .' : 'SUBMIT'
 
   if (!initialValues) {
     initialValues = {
@@ -175,8 +173,9 @@ const CarForm: React.FC<ICarForm> = ({
         variant="outlined"
         type="submit"
         color="primary"
+        disabled={isLoading}
       >
-        Submit
+        {submitBtnText}
       </Button>
     </form>
   );

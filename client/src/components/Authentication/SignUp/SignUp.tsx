@@ -1,27 +1,30 @@
 import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
-import axios from "axios";
+// import axios from "axios";
 import { Redirect, Link, useHistory  } from "react-router-dom";
 import { AuthContext } from "../../../contexts/auth.context";
+import { signUpWithJwt } from '../AuthenticationHelper'
 import "../Authentication.css";
 
 //M-UI
 import { TextField, Button, Grid } from "@material-ui/core";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
 
-interface ISignUp {
-  password: string;
-  confirmPassword: string;
-  name: string;
-  email: string;
-  authType?: string;
-}
+
 
 const SignUp: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const history = useHistory();
   const { user, dispatch } = useContext(AuthContext);
+
+  interface ISignUp {
+    password: string;
+    confirmPassword: string;
+    name: string;
+    email: string;
+    authType?: string;
+  }
 
   const handleSubmit = (userData: ISignUp) => {
     dispatch({ type: "loading" });
@@ -30,22 +33,18 @@ const SignUp: React.FC = () => {
       dispatch({ type: "error" });
       return setErrorMessage("Passwords don`t match");
     }
-
     userData = { ...userData, authType: "jwt" };
-    axios.post("/users/signup", userData)
-      .then((res) => {
-        if (res.status === 201) {
-          setIsSignedUp(true);
-          dispatch({ type: "loading" });
-          history.push('/login')
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setErrorMessage(err.response.data)
+
+    signUpWithJwt(userData).then((res) => {
+      if (res.status === 201) {
+        setIsSignedUp(true);
+        dispatch({ type: "loading" });
+        history.push("/login");
+      } else {
+        setErrorMessage(res.response.data);
         dispatch({ type: "error" });
-      });
-      
+      }
+    });
   };
 
   const formik = useFormik({
@@ -74,7 +73,7 @@ const SignUp: React.FC = () => {
           placeholder="John Doe"
           value={formik.values.name}
           onChange={formik.handleChange}
-          required={true}
+          required
           name="name"
           inputProps={{ "data-testid": "signup-form-input" }}
         />
@@ -85,7 +84,7 @@ const SignUp: React.FC = () => {
           placeholder="johndoe@test.com"
           value={formik.values.email}
           onChange={formik.handleChange}
-          required={true}
+          required
           name="email"
           type="email"
           autoComplete="true"
@@ -97,7 +96,7 @@ const SignUp: React.FC = () => {
           label="Password"
           value={formik.values.password}
           onChange={formik.handleChange}
-          required={true}
+          required
           name="password"
           type="password"
           autoComplete="false"
@@ -110,10 +109,11 @@ const SignUp: React.FC = () => {
           label="Confirm Password"
           value={formik.values.confirmPassword}
           onChange={formik.handleChange}
-          required={true}
+          required
           name="confirmPassword"
           type="password"
           autoComplete="false"
+          InputProps={{ inputProps: { minLength : 3 } }}
           inputProps={{ "data-testid": "signup-form-input" }}
         />
         <Button
@@ -121,6 +121,7 @@ const SignUp: React.FC = () => {
           variant="outlined"
           type="submit"
           color="primary"
+          disabled={user.isLoading}
         >
           {submitBtnText}
         </Button>

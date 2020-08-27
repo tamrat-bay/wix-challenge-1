@@ -1,15 +1,10 @@
 import React, { useContext } from "react";
 import FacebookLogin from "react-facebook-login";
-import axios from "axios";
 import { Redirect,  useHistory } from "react-router-dom";
 import { AuthContext } from "../../../contexts/auth.context";
+import { authWIthFb } from '../AuthenticationHelper'
 
-interface IUserData {
-  fbUserID: string;
-  name: string;
-  token:string;
-  authType:string;
-}
+
 interface ILoginWithFacebook{
   btnText:string;
 }
@@ -17,25 +12,26 @@ const LoginWithFacebook: React.FC<ILoginWithFacebook> = ({btnText}) => {
     const { user, dispatch } = useContext(AuthContext);
     const history = useHistory();
 
+    interface IUserData {
+      fbUserID: string;
+      name: string;
+      token:string;
+      authType:string;
+    }
+
   const authFacebookUser = (userData: IUserData) => {
     dispatch({type: "loading"})
-    axios({
-      method: "post",
-      url: `/users/${userData.authType}`,
-      data: userData,
-      headers: {
-        Authorization: `Bearer ${userData.token}`,
-        fbUserID: userData.fbUserID
-      },
-    })
-      .then(async (res) => {
-        if (res.status === 200 || res.status === 201) {
-         await localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));          
+
+    authWIthFb(userData)
+    .then(res => {
+         if (res.status === 200 || res.status === 201) {
+          localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));          
           dispatch({type: "loggedIn"})
-          history.push('/carsboard')
+          history.push('/cars-board')
+        } else{
+           console.log(res)//res = error
         }
-      })
-      .catch((err) => console.log(err.response.data));
+    })
   };
 
  type FacebookResponse = { status: string; userID: string ; name: string; accessToken: string; }

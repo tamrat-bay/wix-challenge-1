@@ -3,11 +3,11 @@ import FilterBar from "../FilterBar/FilterBar";
 import CarForm from "../CarForm/CarForm";
 import CarCard from "../CarCard/CarCard";
 import Loader from "../Loader/Loader";
-import axios from "axios";
 import { Method } from "axios";
 import Modal from "react-modal";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth.context";
+import { getCars, deleteCar, deleteCarFromState } from './CarBoardHelper'
 import "./CarsBoard.css";
 
 //Models
@@ -26,67 +26,40 @@ const CarsBoard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user, dispatch } = useContext(AuthContext);
   
-  const deleteCarFromState = (carsState,setCarsState,carID) => {
-    let temp: ICar[] = carsState.filter((car) => car._id !== carID);
-    setCarsState(temp);
-  }
-  const deleteCar = (carID: string): void => {
-    setIsLoading(true)
-    const {token, _id} = JSON.parse(localStorage.user); //todo=> change  to user ID
-    const url = `/cars/${user.authType}/${_id}/${carID}`
-    
-    axios({
-      method: "delete",
-      url: url,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        fbUserID: user.fbUserID,
-      },
+ const noAvailableCars = <h2>There are no available cars</h2>
+
+const deleteCarHandler = (carID: string): void => {
+  setIsLoading(true);
+  deleteCar(carID, user.fbUserID)
+    .then(res=> {
+      if(res.status === 200) {
+       deleteCarFromState(cars, setCars, carID);
+       if (filterFlag) {deleteCarFromState(filteredCars, setFilteredCars, carID)}
+     }else {
+       console.log(res)//res = error
+      }
+      setIsLoading(false);
     })
-      .then((res) => {
-        if (res.status === 200) {
-          deleteCarFromState(cars, setCars, carID);
-          if (filterFlag) {
-            deleteCarFromState(filteredCars, setFilteredCars, carID);
-          }
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+};
 
   useEffect(() => {
-    const getCars = () => {
+    if (user.isLoggedIn) {
       setIsLoading(true)
-      const {token, authType} = localStorage.user ? JSON.parse(localStorage.user) : dispatch({type : 'logOut'}); 
-      
-      axios({
-        method: "get",
-        url: `/cars/${authType}`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          fbUserID: user.fbUserID 
-        },
+      getCars(user.fbUserID ).then(res => {
+        if(res.status === 200) {
+          setCars(res.data);
+          setIsLoading(false)
+        }else{
+          dispatch({type : 'logOut'});
+          localStorage.clear()
+        }
       })
-        .then((res) => {
-          if (res.status === 200) {
-            setCars(res.data);
-            setIsLoading(false)
-          }
-        })
-        .catch((err) => {console.log(err); 
-          if(err.response.data === 'Invalid token'){
-              dispatch({type : 'logOut'});
-              localStorage.clear()
-          }
-          });
-    };
-    if (user.isLoggedIn) {getCars();}
+    }
       
-    
   }, [dispatch, user]);
-  
+
   if (!user.isLoggedIn) return <Redirect to='/login' />;
+
   return (
     <div data-testid="cars-board" className="CarsBoard">
       <div className="CarsBoard_addBtn">
@@ -144,26 +117,27 @@ const CarsBoard: React.FC = () => {
                   car={car}
                   setFormRequestMethod={setFormRequestMethod}
                   setFormModalIsOpen={setFormModalIsOpen}
-                  deleteCar={deleteCar}
+                  deleteCar={deleteCarHandler}
                   setSelectedCar={setSelectedCar}
                 />
               ))
             ) : (
-              <p>There are no available cars</p>
+             {noAvailableCars}
             )
-          ) : filteredCars.length ? (
+          ) :
+            filteredCars.length ? (
             (filteredCars as ICar[]).map((car: ICar, i: number) => (
               <CarCard
                 key={i}
                 car={car}
                 setFormRequestMethod={setFormRequestMethod}
                 setFormModalIsOpen={setFormModalIsOpen}
-                deleteCar={deleteCar}
+                deleteCar={deleteCarHandler}
                 setSelectedCar={setSelectedCar}
               />
             ))
           ) : (
-            <h2>There are no available cars</h2>
+            {noAvailableCars}
           )}
         </Grid>
       </div>

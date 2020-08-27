@@ -1,0 +1,9 @@
+.PersonalArea{
+    width: 80vw;
+}
+.PersonalArea_Heading {
+    text-align: left;
+    letter-spacing: 2px;
+    font-family: monospace;
+    color: #0f4c75;
+}

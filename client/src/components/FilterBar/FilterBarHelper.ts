@@ -22,9 +22,16 @@ const filterCarsByPrices = (prices: number[], cars: ICar[]): ICar[] => {
   return filteredCars;
 };
 
-const filterCarsByBrandAndYears = (
+const filterCarsByPricesAndYears = (prices: number[],years: number[], cars: ICar[]): ICar[] => {
+   const filteredByYears = filterCarsByYears(years,cars);
+   const filteredByYearsAndPrices = filterCarsByPrices(prices,filteredByYears)
+   return filteredByYearsAndPrices
+}
+
+const filterCarsByBrandYearsAndPrices = (
   brand: string,
   years: number[],
+  prices: number[],
   cars: ICar[]
 ): ICar[] => {
   const filteredByBrand: ICar[] = filterCarsByBrand(brand, cars);
@@ -32,7 +39,8 @@ const filterCarsByBrandAndYears = (
     years,
     filteredByBrand
   );
-  return filteredByBrandAndYears;
+  const filteredByBrandYearsAndPrices = filterCarsByPrices(prices,filteredByBrandAndYears)
+  return filteredByBrandYearsAndPrices;
 };
 
 const sortCarsByPricesLowToHigh = (cars: ICar[]): ICar[] => {
@@ -53,16 +61,15 @@ const sortCarsByNewestYear = (cars: ICar[]): ICar[] => {
 };
 
 const getUniqueBrandNames = (cars: ICar[]): string[] => {
-  const brandNames = [...new Set(cars)].map(c => c.car)
+  const brandNames = [...new Set(cars.map(c => c.car.toUpperCase()))]
   return brandNames;
 };
 
 export {
-  filterCarsByYears,
-  filterCarsByPrices,
-  filterCarsByBrandAndYears,
+  filterCarsByBrandYearsAndPrices,
   sortCarsByPricesLowToHigh,
   sortCarsByPricesHighToLow,
   sortCarsByNewestYear,
   getUniqueBrandNames,
+  filterCarsByPricesAndYears
 };

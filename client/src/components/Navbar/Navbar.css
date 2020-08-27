@@ -4,7 +4,7 @@
 }
 
 .Navbar nav{
-    width: 90%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -18,10 +18,10 @@
 .Navbar .MuiAppBar-colorPrimary {
     background-color: #1b262c;
 }
-.Navbar .fa, .fas {
+.Navbar .fa, .fas, .fab {
     font-size: 1.8em;
 }
-.Navbar_authMenu_link{
+.Navbar_dropMenu_link{
     color: black !important;
 }
 

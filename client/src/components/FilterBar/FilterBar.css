@@ -39,9 +39,9 @@
     margin: 18px auto;
 }
 .FilterBar .PrivateValueLabel-thumb-1.PrivateValueLabel-open-2 .PrivateValueLabel-offset-3 {
-    transform: scale(1) translateY(-25px);
+    transform: scale(1) translateY(-22px);
 }
-.FilterBar .PrivateValueLabel-circle-4 {
+.FilterBar .PrivateValueLabel-circle-13 {
     width: 45px;
     height: 45px;
     transform: rotate(-35deg);

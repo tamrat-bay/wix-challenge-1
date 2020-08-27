@@ -39,6 +39,7 @@ const CarCard: React.FC<ICarCard> = ({
   const classes = useStyles();
   const [isUsersCar, setIsUsersCar] = useState(false)
   const { user } = useContext(AuthContext);
+  const carImgUrl = car.img  ? car.img : "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png";
 
 useEffect(() => {
   if(user.isLoggedIn){
@@ -48,13 +49,14 @@ useEffect(() => {
 }
 }, [car,user.isLoggedIn])
 
+
   return (
     <Grid data-testid="car-card" item xs={12} className="CarsCard">
       <Card className={classes.root}>
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image={car.img}
+            image={carImgUrl}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">

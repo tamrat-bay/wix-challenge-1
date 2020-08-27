@@ -8,6 +8,15 @@ const getCarsFromDb = (req: Request, res: Response ) => {
     Cars.find({}).then(cars => res.status(200).send(cars.reverse()))
     .catch(err => res.status(404).send('Not found'))
 }
+const getUserCarsFromDb = (req: Request, res: Response ) => {
+  const { userID } = req.params;
+ 
+  User.findById(userID).populate("cars")
+  .exec(function (err: any, user: IUser) {
+    if (err) return res.status(500).send(`server problem - ${err}`);
+    return res.status(200).send(user.cars);
+});
+}
 
 const addCarToDb = (req: Request, res: Response ) => {
     const {userID}  = req.params;
@@ -15,7 +24,7 @@ const addCarToDb = (req: Request, res: Response ) => {
      
     Cars.create({car,car_model, car_model_year, img, price, car_color},
     function (err: any, car: ICar) {
-      if (err)  {console.log(err.response.data) ;return res.status(500).send(`server problem - ${err}`)};
+      if (err)  return res.status(500).send(`server problem - ${err}`);
       User.findById( userID , function (err, user: IUser) {          
         if (err) return res.status(404).send(err);
         user.cars.push(car);
@@ -56,9 +65,9 @@ const deleteCarRefFromUser = (userID: string, carID: string): void => {
     );
     userData = { ...userData!._doc, cars: updatedCarsRef };
     User.findByIdAndUpdate(userID, userData)
-      .then((result) => console.log("Car ref was deleted"))
+      .then((result) => console.log("car ref was deleted"))
       .catch((err) => console.log(err));
   });
 };
 
-export { getCarsFromDb, addCarToDb, deleteCarFromDb, editCarDataInDb }
+export { getCarsFromDb, addCarToDb, deleteCarFromDb, editCarDataInDb, getUserCarsFromDb}

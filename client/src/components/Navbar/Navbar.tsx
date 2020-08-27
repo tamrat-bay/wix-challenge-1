@@ -1,18 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext,useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 import { AuthContext } from "../../contexts/auth.context";
-
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Fade from '@material-ui/core/Fade';
+import BreakPointMenu from "./BreakPointMenu";
+import BeforeLoginMenu from "./BeforeLoginMenu";
 
 import "./Navbar.css";
 
+
 const Navbar: React.FC = () => {
   const { user, dispatch } = useContext(AuthContext);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [width, setWidth] = useState<number>(window.innerWidth);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,6 +21,18 @@ const Navbar: React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const navbarBreakPoint = 600;
+
+    useEffect(() => {
+      window.addEventListener('resize',() =>{
+        setWidth(window.innerWidth)
+      })
+      
+    }, [width])
+
+    const isBreakPoint = navbarBreakPoint >= width
+    
   return (
     <div className="Navbar">
       <AppBar data-testid="navbar">
@@ -34,52 +45,45 @@ const Navbar: React.FC = () => {
                 aria-label="menu"
                 style={{ fontSize: "1.1em" }}
               >
-                Drive-Happier
+                DRIVE-HAPPIER
               </IconButton>
             </Link>
 
             {user.isLoggedIn ? (
               <>
-                <Link to="/carsboard">Cars Board</Link>
-                <span className="Navbar_status_links">
-                  <Link
-                    to="/"
-                    onClick={() => {
-                      localStorage.clear();
-                      dispatch({ type: "logOut" });
-                    }}
-                  >
-                    Log Out
-                  </Link>
-                </span>
+                {isBreakPoint ? (
+                  <BreakPointMenu
+                    open={open}
+                    anchorEl={anchorEl}
+                    dispatch={dispatch}
+                    handleClick={handleClick}
+                    handleClose={handleClose}
+                  />
+                ) : (
+                  <>
+                    <Link to="/cars-board">CARS-BOARD</Link>
+                    <Link to="/personal-area">PERSONAL-AREA</Link>
+                    <span className="Navbar_status_links">
+                      <Link
+                        to="/"
+                        onClick={() => {
+                          localStorage.clear();
+                          dispatch({ type: "logOut" });
+                        }}
+                      >
+                        LOG OUT
+                      </Link>
+                    </span>
+                  </>
+                )}
               </>
             ) : (
-              <div>
-             <div className="Navbar_authMenu">
-                <Button
-                  aria-controls="fade-menu"
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                >
-                  <i style={{color:'white'}} className="fas fa-users"></i>
-                </Button>
-                <Menu
-                  id="fade-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
+                <BeforeLoginMenu
                   open={open}
-                  onClose={handleClose}
-                  TransitionComponent={Fade}
-                >
-                  <Link to="/signup">
-                    <MenuItem className="Navbar_authMenu_link" onClick={handleClose}>Sign Up
-                  </MenuItem></Link>
-                  <Link to="/login">
-                    <MenuItem className="Navbar_authMenu_link" onClick={handleClose}>Login</MenuItem>
-                  </Link>
-                </Menu>
-              </div>
-              </div>
+                  anchorEl={anchorEl}
+                  handleClick={handleClick}
+                  handleClose={handleClose}
+                />
             )}
           </nav>
         </Toolbar>

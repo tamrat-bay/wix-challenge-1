@@ -35,7 +35,7 @@ const authWithFacebook = async (req: Request, res: Response) => {
 
 const signupJwtUser = (req: Request, res: Response) => {
   let { name, email, password, authType }: IUser = req.body;
-
+  
   User.findOne({ email }, (err, user) => {
     if (err) return res.status(400).send(err);
     if (!user) {

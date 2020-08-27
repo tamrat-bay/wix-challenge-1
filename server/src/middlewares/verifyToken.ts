@@ -25,7 +25,7 @@ const verifyJsonWebToken = (
     const verified = jwt.verify(token, "anythingiwant");
     if (verified) return next();
   } catch (err) {
-    res.status(400).send("Invalid Token");
+    res.status(401).send("Invalid Token");
   }
 };
 
@@ -43,7 +43,7 @@ const verifyFbAccessToken = async (
     const res = await axios.get(verifyTokenUrl);
     if (res.data.id === fbUserID) return next();
   } catch (err) {
-    res.status(400).send("Invalid Token");
+    res.status(401).send("Invalid Token");
   }
 };
 

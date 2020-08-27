@@ -14,7 +14,7 @@ const Home = () => {
           Use our extensive database to research and filter trims
           so you can find the car that fits your life.
           </p>
-          <a href="/carsboard">View Cars List</a>
+          <a href="/cars-board">View Cars List</a>
         </div>
         <div className="imgBox">
           <img

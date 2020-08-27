@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import "./FilterBar.css";
 import {
-  filterCarsByPrices,
-  filterCarsByYears,
-  filterCarsByBrandAndYears,
+  filterCarsByBrandYearsAndPrices,
   sortCarsByPricesLowToHigh,
   sortCarsByPricesHighToLow,
   sortCarsByNewestYear,
-  getUniqueBrandNames
-} from "./filterAndSortFunctions";
+  getUniqueBrandNames,
+  filterCarsByPricesAndYears
+} from "./FilterBarHelper";
 
 //Models
 import { ICar } from "../../models/ICar";
@@ -85,17 +84,12 @@ const FilterBar: React.FC<IFilterBar> = ({
     e.preventDefault();
     setFilterFlag(true);
 
-    //!If brand has value then filter need to be by all the options else only by years and price
+    //!If brand has value then filter needs to be by all the options else only by years and price
     return brand
       ? setFilteredCars(
-          filterCarsByPrices(
-            prices,
-            filterCarsByBrandAndYears(brand, years, cars)
-          )
+          filterCarsByBrandYearsAndPrices(brand, years, prices, cars)
         )
-      : setFilteredCars(
-          filterCarsByPrices(prices, filterCarsByYears(years, cars))
-        ); 
+      : setFilteredCars(filterCarsByPricesAndYears(prices, years, cars));
   };
   
   const sortInputValue = sortBy ? sortBy : "Choose";

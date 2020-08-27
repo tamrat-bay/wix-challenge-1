@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { Redirect, Link, useHistory } from "react-router-dom";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
 import { AuthContext } from "../../../contexts/auth.context";
-import axios from "axios";
+import { loginWithJwt } from '../AuthenticationHelper'
 import "../Authentication.css";
 
 //M-UI
@@ -15,26 +15,27 @@ const Login: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const history = useHistory();
 
-  interface ILogin {
+  interface ILoginInfo {
     password: string;
     email: string;
   }
 
-  const handleSubmit = (userData: ILogin) => {
+  const handleSubmit = (userData: ILoginInfo) => {
     dispatch({ type: "loading" });
-    axios.post("/users/login", userData)
+
+    loginWithJwt(userData)
       .then((res) => {
-        if (res.status === 200) {
+        if(res.status === 200){
           localStorage.setItem("user", JSON.stringify(res.data));
           dispatch({ type: "loggedIn" });
-          history.push("/carsboard");
+          history.push("/cars-board");
+        }
+        else{
+        setErrorMessage(res.response.data);
+        dispatch({ type: "error" });
         }
       })
-      .catch((err) => {
-        console.log(err);
-        setErrorMessage(err.response.data);
-        dispatch({ type: "error" });
-      });
+
   };
 
   const displayErrorIfNeeded = errorMessage ? <p className="Authentication_error">{errorMessage} </p> : null;
@@ -84,6 +85,7 @@ const Login: React.FC = () => {
           variant="outlined"
           type="submit"
           color="primary"
+          disabled={user.isLoading}
         >
           {submitBtnText}
         </Button>
