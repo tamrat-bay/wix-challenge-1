@@ -6,13 +6,13 @@ import SignUp from "./components/Authentication/SignUp/SignUp";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
 import Home from "./components/Home/Home";
 import PersonalArea from "./components/PersonalArea/PersonalArea";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter  , Route, Switch } from "react-router-dom";
 import "./App.css";
 
 const App: React.FC = () => {
   return (
     <div data-testid="app" className="App">
-      <Router>
+      <BrowserRouter>
         <Navbar />
         <div className="App_container">
           <Switch>
@@ -24,7 +24,7 @@ const App: React.FC = () => {
             <Route component={PageNotFound}/>
           </Switch>
         </div>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 };

@@ -33,7 +33,6 @@ const PersonalArea = () => {
   };
 
   useEffect(() => {
-    if (user.isLoggedIn) {
       getUserCars(user.fbUserID).then(res => {
         if (res.status === 200) {
           setUserCars(res.data);
@@ -45,9 +44,8 @@ const PersonalArea = () => {
         }
         setIsLoading(false);
       });
-    }
-
   }, [user, dispatch]);
+  
   const userName: string = JSON.parse(localStorage.user).name.toUpperCase();
 
   return (

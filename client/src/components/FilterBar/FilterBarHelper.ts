@@ -22,24 +22,24 @@ const filterCarsByPrices = (prices: number[], cars: ICar[]): ICar[] => {
   return filteredCars;
 };
 
-const filterCarsByPricesAndYears = (prices: number[],years: number[], cars: ICar[]): ICar[] => {
-   const filteredByYears = filterCarsByYears(years,cars);
-   const filteredByYearsAndPrices = filterCarsByPrices(prices,filteredByYears)
+const filterCarsByPricesAndYears =   (prices: number[],years: number[], cars: ICar[])  => {
+   const filteredByYears =  filterCarsByYears(years,cars);
+   const filteredByYearsAndPrices =  filterCarsByPrices(prices,filteredByYears)
    return filteredByYearsAndPrices
 }
 
-const filterCarsByBrandYearsAndPrices = (
+const filterCarsByBrandYearsAndPrices =  (
   brand: string,
   years: number[],
   prices: number[],
   cars: ICar[]
-): ICar[] => {
+)=> {
   const filteredByBrand: ICar[] = filterCarsByBrand(brand, cars);
-  const filteredByBrandAndYears: ICar[] = filterCarsByYears(
+  const filteredByBrandAndYears =  filterCarsByYears(
     years,
     filteredByBrand
   );
-  const filteredByBrandYearsAndPrices = filterCarsByPrices(prices,filteredByBrandAndYears)
+  const filteredByBrandYearsAndPrices =  filterCarsByPrices(prices,filteredByBrandAndYears)
   return filteredByBrandYearsAndPrices;
 };
 

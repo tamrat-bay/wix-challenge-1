@@ -26,9 +26,9 @@ const CarsBoard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user, dispatch } = useContext(AuthContext);
   
- const noAvailableCars = <h2>There are no available cars</h2>
+ const noAvailableCars = 'There are no available cars'
 
-const deleteCarHandler = (carID: string): void => {
+ const deleteCarHandler = (carID: string): void => {
   setIsLoading(true);
   deleteCar(carID, user.fbUserID)
     .then(res=> {
@@ -43,23 +43,20 @@ const deleteCarHandler = (carID: string): void => {
 };
 
   useEffect(() => {
-    if (user.isLoggedIn) {
-      setIsLoading(true)
-      getCars(user.fbUserID ).then(res => {
+      getCars(user.fbUserID ).then( res => {
+        setIsLoading(true)
         if(res.status === 200) {
           setCars(res.data);
           setIsLoading(false)
-        }else{
+        }else{          
           dispatch({type : 'logOut'});
           localStorage.clear()
         }
       })
-    }
-      
   }, [dispatch, user]);
 
   if (!user.isLoggedIn) return <Redirect to='/login' />;
-
+ 
   return (
     <div data-testid="cars-board" className="CarsBoard">
       <div className="CarsBoard_addBtn">
@@ -107,8 +104,7 @@ const deleteCarHandler = (carID: string): void => {
       ? 
       <Loader /> 
       : 
-      <div>
-        <Grid container>
+      <Grid container>
           {!filterFlag ? (
             cars.length ? (
               (cars as Array<ICar>).map((car: ICar, i: number) => (
@@ -122,10 +118,9 @@ const deleteCarHandler = (carID: string): void => {
                 />
               ))
             ) : (
-             {noAvailableCars}
-            )
-          ) :
-            filteredCars.length ? (
+              <h2>{noAvailableCars}</h2>
+              )
+          ) : filteredCars.length ? (
             (filteredCars as ICar[]).map((car: ICar, i: number) => (
               <CarCard
                 key={i}
@@ -137,10 +132,9 @@ const deleteCarHandler = (carID: string): void => {
               />
             ))
           ) : (
-            {noAvailableCars}
+            <h2>{noAvailableCars}</h2>
           )}
-        </Grid>
-      </div>
+      </Grid>
       }
     </div>
   );
