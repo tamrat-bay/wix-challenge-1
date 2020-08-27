@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.editCarDataInDb = exports.deleteCarFromDb = exports.addCarToDb = exports.getCarsFromDb = void 0;
+exports.getUserCarsFromDb = exports.editCarDataInDb = exports.deleteCarFromDb = exports.addCarToDb = exports.getCarsFromDb = void 0;
 const carsSchema_1 = __importDefault(require("../models/carsSchema"));
 const userSchema_1 = __importDefault(require("../models/userSchema"));
 const getCarsFromDb = (req, res) => {
@@ -11,15 +11,22 @@ const getCarsFromDb = (req, res) => {
         .catch(err => res.status(404).send('Not found'));
 };
 exports.getCarsFromDb = getCarsFromDb;
+const getUserCarsFromDb = (req, res) => {
+    const { userID } = req.params;
+    userSchema_1.default.findById(userID).populate("cars")
+        .exec(function (err, user) {
+        if (err)
+            return res.status(500).send(`server problem - ${err}`);
+        return res.status(200).send(user.cars);
+    });
+};
+exports.getUserCarsFromDb = getUserCarsFromDb;
 const addCarToDb = (req, res) => {
     const { userID } = req.params;
     const { car, car_model, car_model_year, img, price, car_color } = req.body;
     carsSchema_1.default.create({ car, car_model, car_model_year, img, price, car_color }, function (err, car) {
-        if (err) {
-            console.log(err.response.data);
+        if (err)
             return res.status(500).send(`server problem - ${err}`);
-        }
-        ;
         userSchema_1.default.findById(userID, function (err, user) {
             if (err)
                 return res.status(404).send(err);
@@ -58,7 +65,7 @@ const deleteCarRefFromUser = (userID, carID) => {
         const updatedCarsRef = userCarsRef.filter((refID) => String(refID) !== carID);
         userData = Object.assign(Object.assign({}, userData._doc), { cars: updatedCarsRef });
         userSchema_1.default.findByIdAndUpdate(userID, userData)
-            .then((result) => console.log("Car ref was deleted"))
+            .then((result) => console.log("car ref was deleted"))
             .catch((err) => console.log(err));
     });
 };

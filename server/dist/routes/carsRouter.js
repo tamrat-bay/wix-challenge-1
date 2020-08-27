@@ -7,6 +7,9 @@ const express_1 = require("express");
 const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const carHelpers_1 = require("../helpers/carHelpers");
 const router = express_1.Router();
+router.get("/:authType/:userID", verifyToken_1.default, (req, res) => {
+    carHelpers_1.getUserCarsFromDb(req, res);
+});
 router.get("/:authType", verifyToken_1.default, (req, res) => {
     carHelpers_1.getCarsFromDb(req, res);
 });

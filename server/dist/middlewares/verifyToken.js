@@ -32,7 +32,7 @@ const verifyJsonWebToken = (req, res, next, token) => {
             return next();
     }
     catch (err) {
-        res.status(400).send("Invalid Token");
+        res.status(401).send("Invalid Token");
     }
 };
 const verifyFbAccessToken = (req, res, next, token) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,7 +46,7 @@ const verifyFbAccessToken = (req, res, next, token) => __awaiter(void 0, void 0,
             return next();
     }
     catch (err) {
-        res.status(400).send("Invalid Token");
+        res.status(401).send("Invalid Token");
     }
 });
 exports.default = verifyToken;
