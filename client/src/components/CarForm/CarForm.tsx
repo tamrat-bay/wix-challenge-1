@@ -70,7 +70,7 @@ const CarForm: React.FC<ICarForm> = ({
     initialValues = {
       car: "",
       car_model: "",
-      car_model_year: 1990,
+      car_model_year: '',
       car_color:"",
       img: "",
       price: "",
@@ -145,7 +145,7 @@ const CarForm: React.FC<ICarForm> = ({
         onChange={formik.handleChange}
         required
         name="price"
-        InputProps={{ inputProps: { min: 100, max: 900000 } }}
+        InputProps={{ inputProps: { min: 200, max: 900000 } }}
         inputProps={{ "data-testid": "car-form-input" }}
       />
       <TextField
