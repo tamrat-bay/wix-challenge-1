@@ -7,7 +7,6 @@ import { AuthContext } from "../../contexts/auth.context";
 import { postCarResponseHandler, editCarResponseHandler, editAndPostRequestHandler } from './CarFormHelper'
 import "./CarForm.css";
 
-
 //M-UI
 import { TextField, Button } from "@material-ui/core";
 

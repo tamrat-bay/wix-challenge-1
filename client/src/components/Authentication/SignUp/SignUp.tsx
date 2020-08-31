@@ -10,7 +10,6 @@ import { TextField, Button, Grid } from "@material-ui/core";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
 
 
-
 const SignUp: React.FC = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

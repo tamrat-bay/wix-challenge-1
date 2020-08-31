@@ -18,9 +18,7 @@ import { Grid, Button } from "@material-ui/core";
 
 const CarsBoard: React.FC = () => {
   const [cars, setCars] = useState<ICar[] | []>([]);
-  // const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
   const [carsForDisplay, setCarsForDisplay] = useState<ICar[] | []>([]);
-  // const [filterFlag, setFilterFlag] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<ICar | null>(null);
   const [formRequestMethod, setFormRequestMethod] = useState<Method>("post");
   const [formModalIsOpen, setFormModalIsOpen] = useState<boolean>(false);
@@ -100,11 +98,10 @@ const CarsBoard: React.FC = () => {
           formModalCloseRequest={formModalCloseRequest}
         />
       </Modal>
-      {isLoading ? (
+      {isLoading ? 
         <Loader />
-      ) : (
+       : 
         <Grid container>
-
           {carsForDisplay.length ? (
             (carsForDisplay as Array<ICar>).map((car: ICar, i: number) => (
               <CarCard
@@ -120,7 +117,7 @@ const CarsBoard: React.FC = () => {
             <h2>{noAvailableCars}</h2>
           )}
         </Grid>
-      )}
+      }
     </div>
   );
 };
