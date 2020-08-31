@@ -18,42 +18,49 @@ import { Grid, Button } from "@material-ui/core";
 
 const CarsBoard: React.FC = () => {
   const [cars, setCars] = useState<ICar[] | []>([]);
-  const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
-  const [filterFlag, setFilterFlag] = useState<boolean>(false);
+  // const [filteredCars, setFilteredCars] = useState<ICar[] | []>([]);
+  const [carsForDisplay, setCarsForDisplay] = useState<ICar[] | []>([]);
+  // const [filterFlag, setFilterFlag] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<ICar | null>(null);
   const [formRequestMethod, setFormRequestMethod] = useState<Method>("post");
   const [formModalIsOpen, setFormModalIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user, dispatch } = useContext(AuthContext);
+
+  const deleteCarHandler = async (carID: string) => {
+    setIsLoading(true);
+    try {
+        await deleteCar(carID, user.fbUserID);
+        deleteCarFromState(cars, setCars, carID);
+        deleteCarFromState(carsForDisplay, setCarsForDisplay, carID)
+    } catch (error) {
+       console.log(error)
+    }
+    setIsLoading(false); 
+  };
   
- const noAvailableCars = 'There are no available cars'
-
- const deleteCarHandler = (carID: string): void => {
-  setIsLoading(true);
-  deleteCar(carID, user.fbUserID)
-    .then(res=> {
-      if(res.status === 200) {
-       deleteCarFromState(cars, setCars, carID);
-       if (filterFlag) {deleteCarFromState(filteredCars, setFilteredCars, carID)}
-     }else {
-       console.log(res)//res = error
-      }
-      setIsLoading(false);
-    })
-};
-
+  const formModalCloseRequest = () => {
+    setFormModalIsOpen(false);
+    setSelectedCar(null);
+  }
   useEffect(() => {
-      getCars(user.fbUserID ).then( res => {
-        setIsLoading(true)
-        if(res.status === 200) {
+
+    (async() => {
+      try {
+          const res = await getCars(user.fbUserID);
           setCars(res.data);
+          setCarsForDisplay(res.data);
           setIsLoading(false)
-        }else{          
+      } catch (error) {
+          console.log(error);
           dispatch({type : 'logOut'});
           localStorage.clear()
-        }
-      })
+      }
+    })()
+
   }, [dispatch, user]);
+
+  const noAvailableCars = 'There are no available cars';
 
   if (!user.isLoggedIn) return <Redirect to='/login' />;
  
@@ -73,20 +80,14 @@ const CarsBoard: React.FC = () => {
       </div>
 
       <FilterBar
-        setFilterFlag={setFilterFlag}
-        setFilteredCars={setFilteredCars}
-        setCars={setCars}
-        filteredCars={filteredCars}
-        filterFlag={filterFlag}
+        setCarsForDisplay={setCarsForDisplay}
+        carsForDisplay={carsForDisplay}
         cars={cars}
       />
       <Modal
         data-testid="car-form"
         isOpen={formModalIsOpen}
-        onRequestClose={() => {
-          setFormModalIsOpen(false);
-          setSelectedCar(null);
-        }}
+        onRequestClose={formModalCloseRequest}
         className="CarForm"
       >
         <CarForm
@@ -95,33 +96,17 @@ const CarsBoard: React.FC = () => {
           cars={cars}
           initialValues={selectedCar}
           setSelectedCar={setSelectedCar}
-          filterFlag={filterFlag}                               
-          setFilteredCars={setFilteredCars}
-          setFormModalIsOpen={setFormModalIsOpen}
+          setCarsForDisplay={setCarsForDisplay}
+          formModalCloseRequest={formModalCloseRequest}
         />
       </Modal>
-     {isLoading
-      ? 
-      <Loader /> 
-      : 
-      <Grid container>
-          {!filterFlag ? (
-            cars.length ? (
-              (cars as Array<ICar>).map((car: ICar, i: number) => (
-                <CarCard
-                  key={i}
-                  car={car}
-                  setFormRequestMethod={setFormRequestMethod}
-                  setFormModalIsOpen={setFormModalIsOpen}
-                  deleteCar={deleteCarHandler}
-                  setSelectedCar={setSelectedCar}
-                />
-              ))
-            ) : (
-              <h2>{noAvailableCars}</h2>
-              )
-          ) : filteredCars.length ? (
-            (filteredCars as ICar[]).map((car: ICar, i: number) => (
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Grid container>
+
+          {carsForDisplay.length ? (
+            (carsForDisplay as Array<ICar>).map((car: ICar, i: number) => (
               <CarCard
                 key={i}
                 car={car}
@@ -134,8 +119,8 @@ const CarsBoard: React.FC = () => {
           ) : (
             <h2>{noAvailableCars}</h2>
           )}
-      </Grid>
-      }
+        </Grid>
+      )}
     </div>
   );
 };

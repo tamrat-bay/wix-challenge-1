@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const getUserCars = (fbUserID: string) => {
+const getUserCars = async (fbUserID: string) => {
     const { token, authType, _id } = localStorage.user
       ? JSON.parse(localStorage.user)
       : null;
     const url = `/cars/${authType}/${_id}`;
-    return axios({
+    
+    return await axios({
       method: "get",
       url,
       headers: {
@@ -13,8 +14,7 @@ const getUserCars = (fbUserID: string) => {
         fbUserID: fbUserID,
       },
     })
-      .then(res => res)
-      .catch(err => err);
+
   };
 
   export { getUserCars }

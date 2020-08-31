@@ -11,7 +11,7 @@ interface IFacebookAuth {
 }
 const authErrorMessage = "We didn't recognize the email or password you entered. Please try again"
 
-const authWithFacebook = async (req: Request, res: Response) => {
+const authWithFacebook =  (req: Request, res: Response) => {
   const { fbUserID, name, authType }: IFacebookAuth = req.body;
 
     User.findOne({ fbUserID: fbUserID })
@@ -69,7 +69,7 @@ const loginJwtUser = (req: Request, res: Response) => {
   User.findOne({ email }, (err, user: IUser) => {
     if (err) return res.status(400).send(err);
     if (user) {
-      const { name, email, authType, _id, cars } = user;
+      const { name, email, authType, _id, cars, favorites } = user;
       //check if password is correct
       bcrypt
         .compare(password, user.password)
@@ -80,7 +80,7 @@ const loginJwtUser = (req: Request, res: Response) => {
             const token = jwt.sign({ _id }, TOKEN_SECRET);
             res
               .header("auth-token", token)
-              .send({ name, authType, email, token, _id, cars });
+              .send({ name, authType, email, token, _id, cars, favorites });
           } else {
             return res.status(403).send(authErrorMessage);
           }

@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     cars: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'cars'
+    }],
+    favorites: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'cars'
     }]
 }, { timestamps: true });
 

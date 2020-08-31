@@ -1,4 +1,4 @@
-import React,{ useContext, useState } from "react";
+import React,{ useContext, useState} from "react";
 import Modal from "react-modal";
 import { useFormik } from "formik";
 import { ICar } from "../../models/ICar";
@@ -7,30 +7,32 @@ import { AuthContext } from "../../contexts/auth.context";
 import { postCarResponseHandler, editCarResponseHandler, editAndPostRequestHandler } from './CarFormHelper'
 import "./CarForm.css";
 
+
 //M-UI
 import { TextField, Button } from "@material-ui/core";
 
 interface ICarForm {
   method: Method;
-  setFormModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  formModalCloseRequest: () => void;
   setCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
   initialValues: ICar | null;
   setSelectedCar: React.Dispatch<React.SetStateAction<ICar | null>>;
   cars: ICar[] | [];
   filterFlag?: boolean
-  setFilteredCars?: React.Dispatch<React.SetStateAction<ICar[] | []>>
+  setCarsForDisplay?: React.Dispatch<React.SetStateAction<ICar[] | []>>
 }
 
 Modal.setAppElement("#root");
 const CarForm: React.FC<ICarForm> = ({
-  setFormModalIsOpen,
+  formModalCloseRequest,
   setCars,
   cars,
   initialValues,
   method,
   setSelectedCar,
-  filterFlag,
-  setFilteredCars
+  setCarsForDisplay
+  // filterFlag,
+  // setFilteredCars
 }) => {
 
   const { user } = useContext(AuthContext);
@@ -39,29 +41,26 @@ const CarForm: React.FC<ICarForm> = ({
   const isPostMethod = method === 'post'
   let { urlBuilder, responseHandler } = isPostMethod ? postCarResponseHandler : editCarResponseHandler
 
-  const handleSubmit =  (formValues: ICar): void => {
+  const handleSubmit = async (formValues: ICar) => {
     const { _id, authType } = JSON.parse(localStorage.user);
     const postURL:string = urlBuilder(authType,_id);
     const editURL:string = urlBuilder(authType,initialValues!._id);
     const url = isPostMethod ? postURL : editURL;
-    setIsLoading(true)
+    setIsLoading(true);
+    
     if(formValues.img && !checkImageURL(formValues.img)) return setErrorMessage('Please use valid image URL');
 
-    editAndPostRequestHandler(method, formValues, user.fbUserID, url)
-      .then(res=> {
-        if(res.status === 200 || res.status === 201){
-            const carID = initialValues ? initialValues._id : null;
-            const updatedCars = responseHandler(cars, res.data, carID);
-            setCars(updatedCars);
-            if (filterFlag) {setFilteredCars!(updatedCars)}
-            setFormModalIsOpen(false);
-        }else{
-           console.log(res)//res = error
-        }
-        setSelectedCar(null);
+    try {
+        const result = await editAndPostRequestHandler(method, formValues, user.fbUserID, url)
+        const carID = initialValues ? initialValues._id : null;
+        const updatedCars = responseHandler(cars, result.data, carID);
+        setCars(updatedCars);
+        if (setCarsForDisplay) {setCarsForDisplay(updatedCars)}
+        formModalCloseRequest();
+    } catch (err) {
+        console.log(err)
         setIsLoading(false)
-        });
-      
+    }
   };
 
   const submitBtnText = isLoading ? 'Loading . . .' : 'SUBMIT'
@@ -87,7 +86,7 @@ const CarForm: React.FC<ICarForm> = ({
     initialValues,
     onSubmit: handleSubmit
   });
-
+   
   return (
     <form
       data-testid="car-form"
@@ -95,10 +94,7 @@ const CarForm: React.FC<ICarForm> = ({
        {displayErrorIfNeeded}
       <span
         className="CarForm_closeWindow"
-        onClick={() => {
-          setSelectedCar(null);
-          setFormModalIsOpen(false);
-        }}
+        onClick={formModalCloseRequest}
       >
         Close window
       </span>

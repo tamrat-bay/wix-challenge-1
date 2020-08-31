@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
-// import axios from "axios";
 import { Redirect, Link, useHistory  } from "react-router-dom";
 import { AuthContext } from "../../../contexts/auth.context";
-import { signUpWithJwt } from '../AuthenticationHelper'
+import { signUpWithJwt } from '../AuthenticationApi'
 import "../Authentication.css";
 
 //M-UI
@@ -26,25 +25,23 @@ const SignUp: React.FC = () => {
     authType?: string;
   }
 
-  const handleSubmit = (userData: ISignUp) => {
+  const handleSubmit = async (userData: ISignUp) => {
     dispatch({ type: "loading" });
-
     if (userData.password !== userData.confirmPassword) {
       dispatch({ type: "error" });
       return setErrorMessage("Passwords don`t match");
     }
     userData = { ...userData, authType: "jwt" };
 
-    signUpWithJwt(userData).then((res) => {
-      if (res.status === 201) {
+    try {
+        await signUpWithJwt(userData);
         setIsSignedUp(true);
         dispatch({ type: "loading" });
         history.push("/login");
-      } else {
-        setErrorMessage(res.response.data);
+    } catch (error) {
+        setErrorMessage(error.response.data);
         dispatch({ type: "error" });
-      }
-    });
+    }
   };
 
   const formik = useFormik({

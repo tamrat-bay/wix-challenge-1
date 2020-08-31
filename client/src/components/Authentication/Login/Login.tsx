@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { Redirect, Link, useHistory } from "react-router-dom";
 import LoginWithFacebook from "../LoginWithFacebook/LoginWithFacebook";
 import { AuthContext } from "../../../contexts/auth.context";
-import { loginWithJwt } from '../AuthenticationHelper'
+import { loginWithJwt } from '../AuthenticationApi'
 import "../Authentication.css";
 
 //M-UI
@@ -20,21 +20,18 @@ const Login: React.FC = () => {
     email: string;
   }
 
-  const handleSubmit = (userData: ILoginInfo) => {
+  const handleSubmit = async (userData: ILoginInfo) => {
     dispatch({ type: "loading" });
 
-    loginWithJwt(userData)
-      .then((res) => {
-        if(res.status === 200){
+      try {
+          const res = await loginWithJwt(userData);
           localStorage.setItem("user", JSON.stringify(res.data));
           dispatch({ type: "loggedIn" });
           history.push("/cars-board");
-        }
-        else{
-        setErrorMessage(res.response.data);
-        dispatch({ type: "error" });
-        }
-      })
+      } catch (error) {
+          setErrorMessage(error.response.data);
+          dispatch({ type: "error" });
+      }
 
   };
 

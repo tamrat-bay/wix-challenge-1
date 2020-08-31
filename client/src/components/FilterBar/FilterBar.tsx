@@ -25,52 +25,43 @@ import {
 
 interface IFilterBar {
   cars: ICar[] | [];
-  filteredCars: ICar[] | [];
-  setCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
-  setFilteredCars: React.Dispatch<React.SetStateAction<ICar[] | []>>;
-  setFilterFlag: React.Dispatch<React.SetStateAction<boolean>>;
-  filterFlag: boolean;
+  carsForDisplay: ICar[] | [];
+  setCarsForDisplay: React.Dispatch<React.SetStateAction<ICar[] | []>>;
 }
 
 const FilterBar: React.FC<IFilterBar> = ({
   cars,
-  setFilteredCars,
-  setFilterFlag,
-  filteredCars,
-  setCars,
-  filterFlag,
+  setCarsForDisplay,
+  carsForDisplay,
 }) => {
   const [years, setYears] = useState<number[]>([1990, 2020]);
   const [prices, setPrices] = useState<number[]>([200, 90000]);
   const [brand, setBrand] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<string>("Choose");
+  const [sortBy, setSortBy] = useState<string>("");
   const brandNames = getUniqueBrandNames(cars);
 
   const sortHandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const { value } = event.target;
     setSortBy(value as string);
     // I use spread operator due to runtime issue when the state changes
-    switch (value) {
-      case "prices-lth":
-        filterFlag
-          ? setFilteredCars([...sortCarsByPricesLowToHigh(filteredCars)])
-          : setCars([...sortCarsByPricesLowToHigh(cars)]);
-        break;
-      case "prices-htl":
-        filterFlag
-          ? setFilteredCars([...sortCarsByPricesHighToLow(filteredCars)])
-          : setCars([...sortCarsByPricesHighToLow(cars)]);
-        break;
-      case "newest":
-        filterFlag
-          ? setFilteredCars([...sortCarsByNewestYear(filteredCars)])
-          : setCars([...sortCarsByNewestYear(cars)]);
-        break;
-      default:
-        break;
-    }
+    sortCars(value)
   };
+
+  const sortCars = (key) => {
+    console.log('sortCars key', key);
+    
+    switch (key) {
+      case "prices-lth":
+        return setCarsForDisplay([...sortCarsByPricesLowToHigh(carsForDisplay)])
+      case "prices-htl":
+        return setCarsForDisplay([...sortCarsByPricesHighToLow(carsForDisplay)])
+      case "newest":
+        return setCarsForDisplay([...sortCarsByNewestYear(carsForDisplay)])
+      default:
+        return carsForDisplay;
+    }
+  }
 
   const yearsHandleChange = (event: any, newValue: number | number[]) => {
     setYears(newValue as number[]);
@@ -89,14 +80,16 @@ const FilterBar: React.FC<IFilterBar> = ({
     setIsLoading(true);
 
     //!If brand has value then filter needs to be by all the options else only by years and price
+    console.log('Cars Before Filt',cars);
+    
     if (brand) {
-      setFilteredCars(
+      console.log('Cars Before FilterbyBerand',cars);
+      setCarsForDisplay(
         filterCarsByBrandYearsAndPrices(brand, years, prices, cars)
       );
     } else {
-      setFilteredCars(filterCarsByPricesAndYears(prices, years, cars));
+      setCarsForDisplay(filterCarsByPricesAndYears(prices, years, cars));
     }
-    setFilterFlag(true);
     setIsLoading(false);
   };
 
@@ -186,7 +179,7 @@ const FilterBar: React.FC<IFilterBar> = ({
           </Button>
           <Button
             variant="outlined"
-            onClick={() => setFilterFlag(false)}
+            onClick={() => setCarsForDisplay(cars)}
             color="primary"
           >
             Display All

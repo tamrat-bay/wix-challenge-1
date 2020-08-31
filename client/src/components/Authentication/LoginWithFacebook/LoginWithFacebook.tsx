@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import FacebookLogin from "react-facebook-login";
 import { Redirect,  useHistory } from "react-router-dom";
 import { AuthContext } from "../../../contexts/auth.context";
-import { authWIthFb } from '../AuthenticationHelper'
+import { authWIthFb } from '../AuthenticationApi'
 
 
 interface ILoginWithFacebook{
@@ -19,19 +19,17 @@ const LoginWithFacebook: React.FC<ILoginWithFacebook> = ({btnText}) => {
       authType:string;
     }
 
-  const authFacebookUser = (userData: IUserData) => {
+  const authFacebookUser = async (userData: IUserData) => {
     dispatch({type: "loading"})
 
-    authWIthFb(userData)
-    .then(res => {
-         if (res.status === 200 || res.status === 201) {
-          localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));          
-          dispatch({type: "loggedIn"})
-          history.push('/cars-board')
-        } else{
-           console.log(res)//res = error
-        }
-    })
+    try {
+        const res = await  authWIthFb(userData);
+        localStorage.setItem("user", JSON.stringify({...res.data,token: userData.token}));          
+        dispatch({type: "loggedIn"})
+        history.push('/cars-board')
+    } catch (error) {
+       console.log(error)
+    }
   };
 
  type FacebookResponse = { status: string; userID: string ; name: string; accessToken: string; }
